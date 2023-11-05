@@ -1,0 +1,8 @@
+<linker>
+  <assembly fullname="Pixiv.VroidSdk">
+    <type fullname="Pixiv.VroidSdk.Oauth.DataModel.*" preserve="all"/>
+    <type fullname="Pixiv.VroidSdk.Api.DataModel.*" preserve="all"/>
+    <type fullname="Pixiv.VroidSdk.Cache.DataModel.*" preserve="all"/>
+  </assembly>
+  <assembly fullname="System.Runtime.Serialization" preserve="all"/>
+</linker>
