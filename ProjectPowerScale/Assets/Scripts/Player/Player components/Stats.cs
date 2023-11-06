@@ -17,6 +17,8 @@ public class Stats
     private byte level = 1;
     private int exp = 0;
     private int requiredExp;
+    private int transformationMod;
+    private int itemMod;
 
     private int baseAttack;
     private int baseDefense;
@@ -95,6 +97,7 @@ public class Stats
     public int FireLvl { get => fireLvl; set => fireLvl = value; }
     public int TeleportLvl { get => teleportLvl; set => teleportLvl = value; }
     public int TimeLvl { get => timeLvl; set => timeLvl = value; }
+    public int TransformationMod { get => Mathf.Clamp(transformationMod, 1, 10000); set { transformationMod = value; CalculateStatsOutput(); } }
 
     public int CalculateExpNeed() { int expNeeded = 4 * (Level * Level * Level); return Mathf.Abs(Exp - expNeeded); }
     public int ExpCurrent() { return Exp - (4 * ((Level - 1) * (Level - 1) * (Level - 1))); }
@@ -133,13 +136,13 @@ public class Stats
     }
     private void SetStats() {
         // + mpBoost
-        baseHealth = 120;
-        healthLeft = baseHealth;
-        baseMp = 30;
-        Health = baseHealth;// + healthBoost
+        //baseHealth = 120;
+        //healthLeft = baseHealth;
+        baseMp = 50;
+        //Health = baseHealth;// + healthBoost
         MP = baseMp;
-        MPLeft = 0;
-        BaseAttack = 5;
+        MPLeft = MP;
+        BaseAttack = 1;
         BaseDefense = 5;
 
         if (onHealthChange != null) {
@@ -157,7 +160,8 @@ public class Stats
         Defense=(HealthLeft/Health+mpLeft)+baseDefense;
         onPowerlv.Invoke((HealthLeft / Health + mpLeft) * (baseDefense+baseAttack));*/
        // Debug.Log("Attack" + Attack);
-        Attack = (int)(BaseAttack * (1 + AttackBoost));
+        Health=(10*mp)* (baseAttack);
+        Attack = (((HealthLeft / 10) + mpLeft) * (baseAttack)*TransformationMod);
         Defense = BaseDefense + DefenseBoost;
     }
     private void AddToAttackBoost() {
