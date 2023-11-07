@@ -31,8 +31,12 @@ public class ZaraInput : MonoBehaviour
         anim.SetTrigger("Teleport");
         //maybe make an object that when it dies you teleport to its location
     }
-    private void OnX() {
-
+    private void OnJump() {
+        if (player.LockedOn) {
+            print("Locked JUMP");
+            anim.SetTrigger("Jump");
+        }
+        print("Jump girl");
     }
     private void OnPause() {
         if (onpause != null) {

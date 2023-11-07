@@ -62,13 +62,13 @@ public class Stats
     public static event UnityAction decrease;
     //Properties
     #region Getters and Setters
-    public int Health { get { return health; } set { health = Mathf.Max(0, value); } }
+    public int Health { get { return health; } set { health = Mathf.Max(0, value); onBaseStatsUpdate.Invoke(); } }
     public int HealthLeft { get { return healthLeft; } set { healthLeft = Mathf.Clamp(value, 0, health); CalculateStatsOutput(); if (onHealthChange != null) { onHealthChange(); } } }
     //public int MPLeft { get { return MpLeft; } set { MpLeft = Mathf.Clamp(value, 0, mp); CalculateStatsOutput(); if (onMPLeft != null) { onMPLeft(); } } }
 
-    public int Attack { get { return attack; } set { attack = value; } }
+    public int Attack { get { return attack; } set { attack = value; onBaseStatsUpdate.Invoke(); } }
     public int Defense { get { return defense; } set { defense = value; } }
-    public int MP { get { return mp; } set { mp = value; if(sendMp!=null) sendMp(mp); } }//
+    public int MP { get { return mp; } set { mp = value; if(sendMp!=null) sendMp(mp); CalculateStatsOutput(); onBaseStatsUpdate.Invoke(); } }//
     public float Speed { get { return speed; } set { speed = value; sendSpeed.Invoke(); } }
     public byte Level { get => level; set => level = value; }
     public int Exp { get => exp; set { exp = value; UpdateUi(); } }
@@ -112,6 +112,7 @@ public class Stats
     }
     public void Start() {
         SetStats();
+        CalculateStatsOutput();
         // Player.weaponSwitch += SetStats;
         //PerfectGuardBox.sendAmt += ChangeMpLeft;
         //PlayerInputs.transformed += OnTransformation;
@@ -144,7 +145,8 @@ public class Stats
         MPLeft = MP;
         BaseAttack = 1;
         BaseDefense = 5;
-
+        HealthLeft = health;
+        TransformationMod = 1;
         if (onHealthChange != null) {
             onHealthChange();
         }
@@ -161,8 +163,8 @@ public class Stats
         onPowerlv.Invoke((HealthLeft / Health + mpLeft) * (baseDefense+baseAttack));*/
        // Debug.Log("Attack" + Attack);
         Health=(10*mp)* (baseAttack);
-        Attack = (((HealthLeft / 10) + mpLeft) * (baseAttack)*TransformationMod);
-        Defense = BaseDefense + DefenseBoost;
+        Attack = (((healthLeft / 10) + mpLeft) * (baseAttack)*transformationMod);
+        //Defense = BaseDefense + DefenseBoost;
     }
     private void AddToAttackBoost() {
         //Upgrading Attacks on Attack boost affect here

@@ -40,7 +40,10 @@ namespace StarterAssets
 
 		public void OnJump(InputValue value)
 		{
-			JumpInput(value.isPressed);
+            if (!player.LockedOn&&player.Anim.GetFloat("YInput")==0 && player.Anim.GetFloat("XInput") == 0) { 
+				JumpInput(value.isPressed);
+			}
+				
 		}
 
 		public void OnSprint(InputValue value)
