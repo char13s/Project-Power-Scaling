@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     private bool skillsUp;
     bool attacking;
     private bool hasTarget;
+    private bool flying;
     Animator anim;
     CharacterController charCon;
     internal Stats stats = new Stats();
@@ -23,6 +24,7 @@ public class Player : MonoBehaviour
     public bool HasTarget { get => hasTarget; set => hasTarget = value; }
     public CharacterController CharCon { get => charCon; set => charCon = value; }
     public Animator Anim { get => anim; set => anim = value; }
+    public bool Flying { get => flying; set => flying = value; }
 
     public static Player GetPlayer() => instance;
     private void Awake() {
