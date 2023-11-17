@@ -39,8 +39,8 @@ public class ZaraInput : MonoBehaviour
         print("Jump girl");
     }
     private void OnLaunch() {
-        anim.Play("LaunchUp");
-        player.Flying = true;
+        //anim.Play("LaunchUp");
+        //player.Flying = true;
     }
     private void OnPause() {
         if (onpause != null) {

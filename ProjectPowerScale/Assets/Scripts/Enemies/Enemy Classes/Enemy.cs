@@ -141,8 +141,8 @@ public class Enemy : MonoBehaviour
         private set {
             dead = value;
             if (dead) {
-                GetComponentInChildren<SkinnedMeshRenderer>().material.SetFloat("_onOrOff", 1);
-                GetComponentInChildren<SkinnedMeshRenderer>().material.SetFloat("dead", 1);
+                //GetComponentInChildren<SkinnedMeshRenderer>().material.SetFloat("_onOrOff", 1);
+                //GetComponentInChildren<SkinnedMeshRenderer>().material.SetFloat("dead", 1);
 
                 OnDefeat();
                 Anim.SetBool("Hurt", dead);

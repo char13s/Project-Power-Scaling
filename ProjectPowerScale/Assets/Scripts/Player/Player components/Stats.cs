@@ -62,14 +62,14 @@ public class Stats
     public static event UnityAction decrease;
     //Properties
     #region Getters and Setters
-    public int Health { get { return health; } set { health = Mathf.Max(0, value); onBaseStatsUpdate.Invoke(); } }
+    public int Health { get { return health; } set { health = Mathf.Max(0, value); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
     public int HealthLeft { get { return healthLeft; } set { healthLeft = Mathf.Clamp(value, 0, health); CalculateStatsOutput(); if (onHealthChange != null) { onHealthChange(); } } }
     //public int MPLeft { get { return MpLeft; } set { MpLeft = Mathf.Clamp(value, 0, mp); CalculateStatsOutput(); if (onMPLeft != null) { onMPLeft(); } } }
 
-    public int Attack { get { return attack; } set { attack = value; onBaseStatsUpdate.Invoke(); } }
+    public int Attack { get { return attack; } set { attack = value; if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
     public int Defense { get { return defense; } set { defense = value; } }
-    public int MP { get { return mp; } set { mp = value; if(sendMp!=null) sendMp(mp); CalculateStatsOutput(); onBaseStatsUpdate.Invoke(); } }//
-    public float Speed { get { return speed; } set { speed = value; sendSpeed.Invoke(); } }
+    public int MP { get { return mp; } set { mp = value; if(sendMp!=null) sendMp(mp); CalculateStatsOutput(); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }//
+    //public float Speed { get { return speed; } set { speed = value; sendSpeed.Invoke(); } }
     public byte Level { get => level; set => level = value; }
     public int Exp { get => exp; set { exp = value; UpdateUi(); } }
     public int BaseAttack { get => baseAttack; set { baseAttack = Mathf.Clamp(value, 0, 300); CalculateStatsOutput(); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
