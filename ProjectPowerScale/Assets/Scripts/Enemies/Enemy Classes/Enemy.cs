@@ -691,7 +691,7 @@ public class Enemy : MonoBehaviour
     }
     private void Drop() {
         int exp = stats.BaseHealth * stats.ExpYield;
-        Zara.stats.AddExp(exp);
+        //Zara.stats.AddExp(exp);
         if (drop != null) {
             Instantiate(drop, transform.position + new Vector3(0, 0.14f, 0), Quaternion.identity);
             drop.transform.position = transform.position;
