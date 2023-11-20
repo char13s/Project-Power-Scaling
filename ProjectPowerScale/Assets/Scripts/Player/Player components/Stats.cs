@@ -25,7 +25,7 @@ public class Stats
     private int baseMp;
     private int baseHealth;
 
-    private float attackBoost;
+    private int attackBoost;
     private int defenseBoost;
     private int mpBoost;
     private int healthBoost;
@@ -76,7 +76,7 @@ public class Stats
     public int BaseDefense { get => baseDefense; set { baseDefense = Mathf.Clamp(value, 0, 300); CalculateStatsOutput(); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
     public int BaseMp { get => baseMp; set { baseMp = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
     public int BaseHealth { get => baseHealth; set { baseHealth = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
-    public float AttackBoost { get => attackBoost; set { attackBoost = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); CalculateStatsOutput(); SetStats(); } }
+    public int AttackBoost { get => attackBoost; set { attackBoost = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); CalculateStatsOutput(); SetStats(); } }
     public int DefenseBoost { get => defenseBoost; set { defenseBoost = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetStats(); } }
     public int MpBoost { get => mpBoost; set { mpBoost = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetStats(); } }
     public int HealthBoost { get => healthBoost; set { healthBoost = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetStats(); } }
@@ -163,12 +163,12 @@ public class Stats
         onPowerlv.Invoke((HealthLeft / Health + mpLeft) * (baseDefense+baseAttack));*/
        // Debug.Log("Attack" + Attack);
         Health=(10*mp)* (baseAttack);
-        Attack = (((healthLeft / 10) + mpLeft) * (baseAttack)*transformationMod);
+        Attack = (((healthLeft / 10) + mpLeft) * (baseAttack+AttackBoost)*transformationMod);
         //Defense = BaseDefense + DefenseBoost;
     }
-    private void AddToAttackBoost() {
+    private void AddToAttackBoost(int val) {
         //Upgrading Attacks on Attack boost affect here
-        //
+        attackBoost += val;
         CalculateStatsOutput();
     }
     private void AddToDefenseBoost() {

@@ -33,6 +33,8 @@ public class Enemy : MonoBehaviour
     [Header("Enemy Parameters")]
     //[SerializeField] private int level;
     [SerializeField] private int attackDelay;
+    private int powerLevel;
+    private int mp;
     //[SerializeField] private int baseExpYield;
     //[SerializeField] private int baseHealth;
     [SerializeField] private float attackDistance;
@@ -106,8 +108,7 @@ public class Enemy : MonoBehaviour
     public static event UnityAction remove;
     #region Getters and Setters
     public int Health { get { return stats.Health; } set { stats.Health = Mathf.Max(0, value); } }
-    public int HealthLeft { get { return stats.HealthLeft; } set { stats.HealthLeft = Mathf.Max(0, value); UIMaintence(); if (canvas != null) canvas.GetComponent<EnemyCanvas>().SetEnemyHealth(); if (stats.HealthLeft <= 0 && !dead) { Dead = true; } } }
-
+    public int HealthLeft { get { return stats.HealthLeft; } set { stats.HealthLeft = Mathf.Max(0, value); UpdateParameters(); UIMaintence(); if (canvas != null) canvas.GetComponent<EnemyCanvas>().SetEnemyHealth(); if (stats.HealthLeft <= 0 && !dead) { Dead = true; } } }
     public bool Attack { get => attack; set { attack = value; Anim.SetBool("Attack", attack); } }
     protected bool Walk { get => walk; set { walk = value; Anim.SetBool("Walking", walk); } }
 
@@ -145,7 +146,7 @@ public class Enemy : MonoBehaviour
                 //GetComponentInChildren<SkinnedMeshRenderer>().material.SetFloat("dead", 1);
 
                 OnDefeat();
-                Anim.SetBool("Hurt", dead);
+                //Anim.SetBool("Hurt", dead);
                 if (onAnyDefeated != null) {
                     onAnyDefeated(this);
                 }
@@ -180,6 +181,8 @@ public class Enemy : MonoBehaviour
     public int Stagger { get { return stats.StaggerLeft; } set { stats.StaggerLeft = Mathf.Max(0, value); UIMaintence(); } }
 
     public bool Timelining { get => timelining; set => timelining = value; }
+    public int PowerLevel { get => powerLevel; set { powerLevel = value;canvas.GetComponent<EnemyCanvas>().SetPowerLevel(powerLevel); } }
+    public int Mp { get => mp; set { mp = value; UpdateParameters(); } }
     #endregion
 
 
@@ -215,7 +218,7 @@ public class Enemy : MonoBehaviour
         HealthLeft = stats.Health;
         StandbyState();
         
-        Anim.Play("Spawn In");
+        //Anim.Play("Spawn In");
     }
     private void OnDisable() {
         TotalCount = Enemies.Count;
@@ -233,6 +236,7 @@ public class Enemy : MonoBehaviour
     }
     public virtual void Start() {
         CharCon = GetComponent<CharacterController>();
+        Zara = Player.GetPlayer();
         // distanceGround = GetComponent<Collider>().bounds.extents.y;
        // Zend = NewZend.GetPlayer();
         //#region Grabbing Behaviors here
@@ -285,11 +289,19 @@ public class Enemy : MonoBehaviour
         }
     }*/
     private void StatCalculation() {
-        Health = stats.BaseHealth * stats.Level;
-        stats.Attack = stats.BaseAttack * stats.Level;
+        Health = (10 * stats.BaseMp) * (stats.BaseAttack); //
+        orbWorth=(10*stats.BaseMp)* (stats.BaseAttack);
+        HealthLeft = Health;
+        Mp = stats.MPLeft;
+
         stats.Defense = stats.BaseDefense * stats.Level;
         stats.StaggerLeft = stats.Stagger;
         Stagger = stats.StaggerLeft;
+        
+    }
+    private void UpdateParameters() {
+        stats.Attack = ((HealthLeft / 10) + Mp) * stats.BaseAttack; 
+        PowerLevel = stats.Attack;
     }
     //public static Enemy GetEnemy(int i) => Enemies[i];
     public void OnPlayerDeath() {
@@ -591,6 +603,7 @@ public class Enemy : MonoBehaviour
             else {
                 dmg = (int)Mathf.Clamp(((Zara.stats.Attack * addition)) * dmgModifier, 1, 999);
             }
+            print(dmg);
             HealthLeft -= dmg;
             //HitText hitSplat= new HitText();
             //Debug.Log(hitSplat.Text.ToString());
