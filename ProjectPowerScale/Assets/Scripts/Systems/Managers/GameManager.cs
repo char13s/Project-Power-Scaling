@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour
     public GameState CurrentState { get => currentState; set { currentState = value; StateMappings(); } }
     public int OrbAmt { get => orbAmt; set => orbAmt = value; }
     public int LastLevel { get => lastLevel; set => lastLevel = value; }
-
     public static GameManager GetManager() => instance;
     // Start is called before the first frame update
     private void Awake() {
@@ -34,6 +33,7 @@ public class GameManager : MonoBehaviour
     }
 
     void Start() {
+        AssignEvents();
         //DialogueTrigger.gameMode += DialogueTriggered;
         //PlayerInputs.pause += PauseGame;
         //ExperimentalInputs.pause += PauseGame;
@@ -45,6 +45,15 @@ public class GameManager : MonoBehaviour
         //LoadingCanvas.loadPlayer += RespawnPlayer;
         //NewZend.playerEnabled += AssignPlayer;
         //PauseCanvas.pause += PauseGame;
+    }
+    private void OnDisable() {
+        UnAssignEvents();
+    }
+    private void AssignEvents() {
+        SavePoint.saveGame += SaveGame;
+    }
+    private void UnAssignEvents() {
+        SavePoint.saveGame -= SaveGame;
     }
     private void AssignPlayer() {
 
@@ -97,6 +106,13 @@ public class GameManager : MonoBehaviour
                     switchMap(4);
                 break;
         }
+    }
+    private void LoadGame() {
+        Player.GetPlayer().transform.position=SaveLoad.Load().Location;
+        Player.GetPlayer().stats = SaveLoad.Load().Stats;
+    }
+    private void SaveGame() {
+        SaveLoad.Save(Player.GetPlayer());
     }
     private void SetCheck(GameObject val) {
         //checkPoint = val;

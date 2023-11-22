@@ -93,7 +93,7 @@ public class PlayerLockOn : MonoBehaviour
             //if (player.Attacking)
             print("player is locked");
             if (Enemies.Count >0)
-                player.AimminPoint.transform.position = EnemyTarget.transform.position;
+                player.AimminPoint.transform.position = EnemyTarget.CharCon.center;
             else {
                 player.AimminPoint.transform.position = transform.position + new Vector3(0, 1.5f, 10);
             }

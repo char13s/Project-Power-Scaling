@@ -8,6 +8,7 @@ public class ZaraInput : MonoBehaviour
     private Animator anim;
     private Player player;
 
+    private Interactable interactObj;
     public static event UnityAction onpause;
     // Start is called before the first frame update
     void Start()
@@ -28,7 +29,11 @@ public class ZaraInput : MonoBehaviour
         anim.SetTrigger("StrongAttack");
     }
     private void OnCircle() {
-        anim.SetTrigger("Teleport");
+        if (interactObj == null)
+            anim.SetTrigger("Teleport");
+        else {
+            interactObj.Interact();
+        }
         //maybe make an object that when it dies you teleport to its location
     }
     private void OnJump() {
@@ -70,6 +75,10 @@ public class ZaraInput : MonoBehaviour
         anim.Play("Dash");
     }
     #endregion
+    private void RecieveInteractable(Interactable obj) {
+        print("interacted");
+        interactObj = obj;
+    }
     #region Transformation slots
     private void OnDpadUp() {
         //Maybe transformation slots
