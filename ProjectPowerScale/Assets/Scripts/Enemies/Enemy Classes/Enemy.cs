@@ -237,20 +237,21 @@ public class Enemy : MonoBehaviour
     public virtual void Start() {
         CharCon = GetComponent<CharacterController>();
         Zara = Player.GetPlayer();
+        CharCon.center= new Vector3(CharCon.center.x, CharCon.height / 2, CharCon.center.z);
         // distanceGround = GetComponent<Collider>().bounds.extents.y;
-       // Zend = NewZend.GetPlayer();
+        // Zend = NewZend.GetPlayer();
         //#region Grabbing Behaviors here
-       //EnemyHitBehavior[] hitBehaviors = Anim.GetBehaviours<EnemyHitBehavior>();
-       //for (int i = 0; i < hitBehaviors.Length; i++)
-       //    hitBehaviors[i].Enemy = this;
-       //EnemyChaseBehavior[] chaseBehaviors = Anim.GetBehaviours<EnemyChaseBehavior>();
-       //for (int i = 0; i < chaseBehaviors.Length; i++)
-       //    chaseBehaviors[i].Enemy = this;
-       //EnemyKnockedUp[] move = Anim.GetBehaviours<EnemyKnockedUp>();
-       //for (int i = 0; i < move.Length; i++)
-       //    move[i].Enemy = this;
-       //#endregion
-       //TotalCount = Enemies.Count;
+        //EnemyHitBehavior[] hitBehaviors = Anim.GetBehaviours<EnemyHitBehavior>();
+        //for (int i = 0; i < hitBehaviors.Length; i++)
+        //    hitBehaviors[i].Enemy = this;
+        //EnemyChaseBehavior[] chaseBehaviors = Anim.GetBehaviours<EnemyChaseBehavior>();
+        //for (int i = 0; i < chaseBehaviors.Length; i++)
+        //    chaseBehaviors[i].Enemy = this;
+        //EnemyKnockedUp[] move = Anim.GetBehaviours<EnemyKnockedUp>();
+        //for (int i = 0; i < move.Length; i++)
+        //    move[i].Enemy = this;
+        //#endregion
+        //TotalCount = Enemies.Count;
     }
     public void TimeliningControl(bool val) {
         Timelining = val;
@@ -290,7 +291,7 @@ public class Enemy : MonoBehaviour
     }*/
     private void StatCalculation() {
         Health = (10 * stats.BaseMp) * (stats.BaseAttack); //
-        orbWorth=(10*stats.BaseMp)* (stats.BaseAttack);
+        orbWorth=(10*stats.BaseMp* stats.BaseAttack)/4;
         HealthLeft = Health;
         Mp = stats.MPLeft;
 
@@ -703,8 +704,8 @@ public class Enemy : MonoBehaviour
         }
     }
     private void Drop() {
-        int exp = stats.BaseHealth * stats.ExpYield;
-        //Zara.stats.AddExp(exp);
+        //Zara.stats.AddExp(orbWorth);
+        
         if (drop != null) {
             Instantiate(drop, transform.position + new Vector3(0, 0.14f, 0), Quaternion.identity);
             drop.transform.position = transform.position;

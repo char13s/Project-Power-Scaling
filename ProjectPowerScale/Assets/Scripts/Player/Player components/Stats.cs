@@ -17,7 +17,7 @@ public class Stats
     private byte level = 1;
     private int exp = 0;
     private int requiredExp;
-    private int transformationMod;
+    private int transformationMod=1;
     private int itemMod;
 
     private int baseAttack;
@@ -72,14 +72,14 @@ public class Stats
     //public float Speed { get { return speed; } set { speed = value; sendSpeed.Invoke(); } }
     public byte Level { get => level; set => level = value; }
     public int Exp { get => exp; set { exp = value; UpdateUi(); } }
-    public int BaseAttack { get => baseAttack; set { baseAttack = Mathf.Clamp(value, 0, 300); CalculateStatsOutput(); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
-    public int BaseDefense { get => baseDefense; set { baseDefense = Mathf.Clamp(value, 0, 300); CalculateStatsOutput(); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
-    public int BaseMp { get => baseMp; set { baseMp = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
-    public int BaseHealth { get => baseHealth; set { baseHealth = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
-    public int AttackBoost { get => attackBoost; set { attackBoost = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); CalculateStatsOutput(); SetStats(); } }
-    public int DefenseBoost { get => defenseBoost; set { defenseBoost = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetStats(); } }
-    public int MpBoost { get => mpBoost; set { mpBoost = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetStats(); } }
-    public int HealthBoost { get => healthBoost; set { healthBoost = Mathf.Clamp(value, 0, 300); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetStats(); } }
+    public int BaseAttack { get => baseAttack; set { baseAttack = Mathf.Clamp(value, 0, 9999999); CalculateStatsOutput(); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
+    public int BaseDefense { get => baseDefense; set { baseDefense = Mathf.Clamp(value, 0, 9999999); CalculateStatsOutput(); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
+    public int BaseMp { get => baseMp; set { baseMp = Mathf.Clamp(value, 0, 9999999); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
+    public int BaseHealth { get => baseHealth; set { baseHealth = Mathf.Clamp(value, 0, 9999999); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
+    public int AttackBoost { get => attackBoost; set { attackBoost = Mathf.Clamp(value, 0, 9999999); if (onBaseStatsUpdate != null) onBaseStatsUpdate();  SetStats();CalculateStatsOutput(); } }
+    public int DefenseBoost { get => defenseBoost; set { defenseBoost = Mathf.Clamp(value, 0, 9999999); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetStats(); } }
+    public int MpBoost { get => mpBoost; set { mpBoost = Mathf.Clamp(value, 0, 9999999); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetStats(); } }
+    public int HealthBoost { get => healthBoost; set { healthBoost = Mathf.Clamp(value, 0, 9999999); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetStats(); } }
 
     public int RequiredExp { get => requiredExp; set => requiredExp = value; }
     public int Abilitypoints { get => abilitypoints; set { abilitypoints = value; if (onBaseStatsUpdate != null) onBaseStatsUpdate(); if(onOrbGain!=null) onOrbGain(abilitypoints); } }
@@ -87,7 +87,7 @@ public class Stats
     public int SwordProficency { get => swordProficency; set => swordProficency = value; }
     public int SwordLevel { get => swordLevel; set => swordLevel = value; }
     public byte KryllLevel { get => kryllLevel; set => kryllLevel = value; }
-    public int MPLeft { get => mpLeft; set { mpLeft = Mathf.Clamp(value, 0, mp); if(updateMP!=null) updateMP(MPLeft);
+    public int MPLeft { get => mpLeft; set { mpLeft = Mathf.Clamp(value, 1, mp); if(updateMP!=null) updateMP(MPLeft);
             } }
 
     public int DarkLvl { get => darkLvl; set => darkLvl = value; }
@@ -97,13 +97,13 @@ public class Stats
     public int FireLvl { get => fireLvl; set => fireLvl = value; }
     public int TeleportLvl { get => teleportLvl; set => teleportLvl = value; }
     public int TimeLvl { get => timeLvl; set => timeLvl = value; }
-    public int TransformationMod { get => Mathf.Clamp(transformationMod, 1, 10000); set { transformationMod = value; CalculateStatsOutput(); } }
+    public int TransformationMod { get =>transformationMod;  set { Mathf.Clamp(transformationMod, 1, 10000); CalculateStatsOutput(); } }
 
     public int CalculateExpNeed() { int expNeeded = 4 * (Level * Level * Level); return Mathf.Abs(Exp - expNeeded); }
     public int ExpCurrent() { return Exp - (4 * ((Level - 1) * (Level - 1) * (Level - 1))); }
     #endregion
     public void AddExp(int points) {
-        exp += points;
+        MpBoost += points / 4;
     }
     public void DisplayAbilities() {
         if (onShowingStats != null) {
@@ -139,9 +139,9 @@ public class Stats
         // + mpBoost
         //baseHealth = 120;
         //healthLeft = baseHealth;
-        baseMp = 50;
+        baseMp = 100;
         //Health = baseHealth;// + healthBoost
-        MP = baseMp;
+        MP = baseMp+mpBoost;
         MPLeft = MP;
         BaseAttack = 1;
         BaseDefense = 5;
@@ -158,13 +158,13 @@ public class Stats
     //private void ChangeMpLeft(int amt) => MPLeft += amt;
     private void CalculateStatsOutput() {
         //calculated everytime health or Mp is changed.
-        /*Attack=(HealthLeft/Health+mpLeft)+baseAttack;
-        Defense=(HealthLeft/Health+mpLeft)+baseDefense;
-        onPowerlv.Invoke((HealthLeft / Health + mpLeft) * (baseDefense+baseAttack));*/
-       // Debug.Log("Attack" + Attack);
-        Health=(10*mp)* (baseAttack);
-        Attack = (((healthLeft / 10) + mpLeft) * (baseAttack+AttackBoost)*transformationMod);
-        //Defense = BaseDefense + DefenseBoost;
+        //Health=(10*mp)* (baseAttack); VERY CLEAN ONE
+        //Attack = (1+ mpLeft)*(healthLeft/health) * baseAttack+(attackBoost)*transformationMod; Interesting curve maybe will use
+
+        //Attack = (((healthLeft / 10) + (mpLeft)) * (baseAttack))+attackBoost*(healthLeft/health)); A simple one I didnt know how to make stronger
+        //Attack = (((healthLeft / 10) + mpLeft) * (baseAttack) * transformationMod)+AttackBoost;  A chaotic one
+        Health = (10 * mp);//Attack got taken out for simplicity
+        Attack= (mpLeft) * (healthLeft / health)* transformationMod;// Until I think of how to handle upgrading base attack values if theres time.
     }
     private void AddToAttackBoost(int val) {
         //Upgrading Attacks on Attack boost affect here

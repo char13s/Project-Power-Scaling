@@ -10,13 +10,14 @@ public class GameManager : MonoBehaviour
     public static event UnityAction<bool> pauseScreen;
     public static event UnityAction<int> switchMap;
     public static event UnityAction gameOver;
+    public static event UnityAction<int> sendOrbs;
     //private Game tempSave;
     private int orbAmt;
     private int lastLevel;
     public enum GameState { Paused, PlayMode,Dialogue }
     private GameState currentState;
     public GameState CurrentState { get => currentState; set { currentState = value; StateMappings(); } }
-    public int OrbAmt { get => orbAmt; set => orbAmt = value; }
+    public int OrbAmt { get => orbAmt; set { orbAmt = value; if (sendOrbs != null){ sendOrbs(orbAmt); } } }
     public int LastLevel { get => lastLevel; set => lastLevel = value; }
     public static GameManager GetManager() => instance;
     // Start is called before the first frame update
@@ -51,9 +52,11 @@ public class GameManager : MonoBehaviour
     }
     private void AssignEvents() {
         SavePoint.saveGame += SaveGame;
+        Enemy.sendOrbs += Collect;
     }
     private void UnAssignEvents() {
         SavePoint.saveGame -= SaveGame;
+        Enemy.sendOrbs -= Collect;
     }
     private void AssignPlayer() {
 
@@ -123,7 +126,7 @@ public class GameManager : MonoBehaviour
         //tempZ.stats=tempSave.Stats;
     }
     private void Collect(int amt) {
-        orbAmt += amt;
+        OrbAmt += amt;
     }
     public void QuitGame() {
         Application.Quit();

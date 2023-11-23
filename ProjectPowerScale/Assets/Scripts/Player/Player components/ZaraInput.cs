@@ -25,6 +25,9 @@ public class ZaraInput : MonoBehaviour
     private void OnSquare() {
         anim.SetTrigger("Attack");
     }
+    private void OnHoldAttack() {
+        anim.SetTrigger("HoldAttack");
+    }
     private void OnTriangle() {
         anim.SetTrigger("StrongAttack");
     }
@@ -82,6 +85,7 @@ public class ZaraInput : MonoBehaviour
     #region Transformation slots
     private void OnDpadUp() {
         //Maybe transformation slots
+
     }
     private void OnDpadDown() {
 

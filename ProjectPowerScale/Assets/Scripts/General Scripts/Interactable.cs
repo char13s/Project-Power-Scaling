@@ -7,6 +7,7 @@ public abstract class Interactable : MonoBehaviour
     public static event UnityAction<Interactable> sendThis;
     private void OnTriggerEnter(Collider other) {
         //send timeline to playerInputs
+        EnterEvent();
         sendThis.Invoke(this);
     }
     private void OnTriggerStay(Collider other) {
@@ -14,6 +15,9 @@ public abstract class Interactable : MonoBehaviour
     }
     private void OnTriggerExit(Collider other) {
         sendThis(null);
+        ExitEvent();
     }
     public abstract void Interact();
+    public abstract void EnterEvent();
+    public abstract void ExitEvent();
 }
