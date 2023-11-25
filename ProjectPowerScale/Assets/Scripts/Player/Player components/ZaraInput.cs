@@ -5,6 +5,11 @@ using UnityEngine.InputSystem;
 using UnityEngine.Events;
 public class ZaraInput : MonoBehaviour
 {
+    [SerializeField] private GameObject pierceSword;
+    [SerializeField] private GameObject heavySwordPincer;
+    [SerializeField] private GameObject protectionSwing;
+    [SerializeField] private GameObject holdSwordProtection;
+    [SerializeField] private GameObject effectsPoint;
     private Animator anim;
     private Player player;
 
@@ -29,7 +34,18 @@ public class ZaraInput : MonoBehaviour
         anim.SetTrigger("HoldAttack");
     }
     private void OnTriangle() {
-        anim.SetTrigger("StrongAttack");
+        if (anim.GetFloat("YInput") > 0.5) {
+            Instantiate(pierceSword, effectsPoint.transform.position, Quaternion.identity);
+        }
+        else if (anim.GetFloat("YInput") < 0.5) {
+            Instantiate(heavySwordPincer, effectsPoint.transform.position, Quaternion.identity);
+        }
+        else {
+            Instantiate(protectionSwing, effectsPoint.transform.position, Quaternion.identity);
+        }      
+    }
+    private void OnHoldTriangle() {
+        Instantiate(holdSwordProtection, effectsPoint.transform.position, Quaternion.identity);
     }
     private void OnCircle() {
         if (interactObj == null)
