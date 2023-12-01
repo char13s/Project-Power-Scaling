@@ -9,6 +9,7 @@ public class EnemyCanvas : MonoBehaviour
     [SerializeField] private Slider hpSlider;
     [SerializeField] private Image fillRef;
     [SerializeField] private Slider defSlider;
+    [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI powerLeveltext;
     private void Update() {
         FacePlayer();
@@ -19,18 +20,13 @@ public class EnemyCanvas : MonoBehaviour
         qTo = Quaternion.LookRotation(direction);
         transform.rotation = qTo;
     }
-    public void SetEnemyHealth() {
-        
+    public void SetEnemyHealth() { 
         if (hpSlider.value < (hpSlider.maxValue / 4)) {
-            
             fillRef.color = Color.yellow;
         }
-
+        healthText.text = hpSlider.value + "/" + hpSlider.maxValue;
     }
     public void SetPowerLevel(int power) {
         powerLeveltext.text = "BP: "+power.ToString();
     }
-    //public void SetDefMeter() { 
-    //
-    //}
 }

@@ -35,7 +35,7 @@ public class ZaraInput : MonoBehaviour
     }
     private void OnTriangle() {
         if (anim.GetFloat("YInput") > 0.5) {
-            Instantiate(pierceSword, effectsPoint.transform.position, Quaternion.identity);
+            Instantiate(pierceSword, effectsPoint.transform.position, player.Body.transform.rotation);
         }
         else if (anim.GetFloat("YInput") < 0.5) {
             Instantiate(heavySwordPincer, effectsPoint.transform.position, Quaternion.identity);
@@ -45,7 +45,7 @@ public class ZaraInput : MonoBehaviour
         }      
     }
     private void OnHoldTriangle() {
-        Instantiate(holdSwordProtection, effectsPoint.transform.position, Quaternion.identity);
+        Instantiate(holdSwordProtection, effectsPoint.transform.position, player.Body.transform.rotation);
     }
     private void OnCircle() {
         if (interactObj == null)

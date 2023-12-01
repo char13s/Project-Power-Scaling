@@ -8,12 +8,12 @@ public class PlayerLockOn : MonoBehaviour
     [SerializeField] private static List<Enemy> enemies = new List<Enemy>(16);
     private Plane[] planes;
     [SerializeField] private LayerMask layerMask;
-    //[SerializeField] private float radius;
+    [SerializeField] private float radius;
     [SerializeField] private Image aimIcon;
     private Camera cam;
     private Player player;
     private Enemy enemyTarget;
-    //EnemyDetection detector;
+
     public static event UnityAction<bool> onLockOn;
     public static event UnityAction<Enemy> onTargetFound;
     public static event UnityAction<int> playBattleTheme;
@@ -32,29 +32,33 @@ public class PlayerLockOn : MonoBehaviour
     public float RotationSpeed { get => rotationSpeed; set { rotationSpeed = value; Mathf.Clamp(value, 5, 8); } }
     public static List<Enemy> Enemies { get => enemies; set => enemies = value; }
     public int T { get => t; set { t = value; Mathf.Clamp(t, 0, Enemies.Count); } }
-    public Enemy EnemyTarget { get => enemyTarget; set { enemyTarget = value; if (value != null) { if (onTargetFound != null) onTargetFound(value); EnemyLockedTo(); } } }
+    public Enemy EnemyTarget { get => enemyTarget; set { enemyTarget = value; if (value != null) { if (onTargetFound != null) onTargetFound(value); } } }
     public float RotateSpeed { get => rotateSpeed; set { rotateSpeed = value; Mathf.Clamp(value, 5, 8); } }
+
     public Enemy ClosestEnemy { get => closestEnemy; set => closestEnemy = value; }
     public bool Takedown { get => takedown; set => takedown = value; }
     // Start is called before the first frame update
     private void OnEnable() {
         Enemy.onAnyDefeated += RemoveTheDead;
-        //NewZend.findEnemy += firstLocked;
-        //AttackStates.autoLocked += LockToClosest;
-        //AttackStates.locked += LockToTarget;
-        //NewZend.onPlayerDeath += RemoveAllEnemies;
+        //ewZend.findEnemy += firstLocked;
+        ///AttackStates.autoLocked += LockToClosest;
+        //ttackStates.locked += LockToTarget;
+        //ockedOnState.autoLocked += LockToTarget;
+        //ewZend.onPlayerDeath += RemoveAllEnemies;
     }
     private void OnDisable() {
         Enemy.onAnyDefeated -= RemoveTheDead;
         //NewZend.findEnemy -= firstLocked;
         //AttackStates.autoLocked -= LockToClosest;
         //AttackStates.locked -= LockToTarget;
+        //LockedOnState.autoLocked -= LockToTarget;
         //NewZend.onPlayerDeath -= RemoveAllEnemies;
+        RemoveAllEnemies();
     }
     void Start() {
         cam = Camera.main;
         player = Player.GetPlayer();
-        //detector = GetComponent<EnemyDetection>();
+
     }
     private void RemoveTheDead(Enemy enemy) {
         Enemies.Remove(enemy);
@@ -66,13 +70,11 @@ public class PlayerLockOn : MonoBehaviour
         displacement = val;
     }
     private void OnTriggerEnter(Collider other) {
-        print("Entered");
         if (other.GetComponent<Enemy>() && !Enemies.Contains(other.GetComponent<Enemy>()))
             Enemies.Add(other.GetComponent<Enemy>());
     }
     private void OnTriggerExit(Collider other) {
-        if (other.GetComponent<Enemy>())
-            Enemies.Remove(other.GetComponent<Enemy>());
+
     }
     // Update is called once per frame
     void Update() {
@@ -92,13 +94,20 @@ public class PlayerLockOn : MonoBehaviour
         if (player.LockedOn) {
             //if (player.Attacking)
             print("player is locked");
-            if (Enemies.Count >0)
-                player.AimminPoint.transform.position = EnemyTarget.transform.position + new Vector3(0, 1.5f,0);
+            if (Enemies.Count > 0&&EnemyTarget!=null)
+                player.AimminPoint.transform.position = EnemyTarget.transform.position + new Vector3(0, 1.5f, 0);
             else {
                 player.AimminPoint.transform.position = transform.position + new Vector3(0, 1.5f, 10);
             }
             GetInput();
         }
+        
+        //if (t > enemies.Count && t > 0) {
+        //    T--;
+        //}
+        //if (T == enemies.Count) {
+        //    T = 0;
+        //}
     }
     public void SwitchTarget(int val) {
         T += val;
@@ -106,31 +115,35 @@ public class PlayerLockOn : MonoBehaviour
         if (t >= enemies.Count && t > 0) {
             T--;
         }
-        if (T == enemies.Count) {
+        if (t == enemies.Count) {
             T = 0;
         }
-        enemyTarget = Enemies[T];
+        if (t < 0) {
+            T = 0;
+        }
+        EnemyTarget = Enemies[T];
     }
     private void GetInput() {
-       // if (Enemies.Count != 0 && T < Enemies.Count) {
-            LockOn(player.AimminPoint);
-        //}
+        if (Enemies.Count != 0 && T < Enemies.Count) {
+            LockOn(enemyTarget.gameObject);
+        }
     }
     private void firstLocked() {
         EnemyTarget = enemies[0];
     }
     private void EnemyLockedTo() {
-
-            //EnemyTarget = enemies[T];
-            EnemyTarget.LockedOn = true;
+        if (!Enemies[T].Dead) {
+            EnemyTarget = enemies[T];
             if (player.LockedOn&&aimIcon!=null)
                 aimIcon.transform.position = Camera.main.WorldToScreenPoint(EnemyTarget.transform.position);
-
-
+        }
+        else {
+            SwitchTarget(-1);
+        }
         //Enemy.GetEnemy(enemies.IndexOf(enemies[T])); stupid code -_-
         //player.BattleCamTarget.transform.position = EnemyTarget.transform.position;
     }
-    /*private void FindEnemyInFrontOfPlayer() {
+    private void FindEnemyInFrontOfPlayer() {
         RaycastHit info;
         inputDirection = transform.forward * 10;
         if (Physics.SphereCast(transform.position, 2, inputDirection, out info, radius, layerMask)) {
@@ -141,32 +154,32 @@ public class PlayerLockOn : MonoBehaviour
             //lockon.Enemies.Add(currentTarget);
         }
         //return null;
-    }*/
+    }
     public void Findtarget() {
         //GetClosestEnemy();
     }
     private void GetClosestEnemy() {
-        if (Enemies.Count == 1) {
-            //if(enemies[T].Model.gameObject.GetComponentInChildren<SkinnedMeshRenderer>().isVisible)
-            ClosestEnemy = enemies[0];
-            EnemyTarget= enemies[0];
-            //EnemyLockedTo();
-        }
-        else {
-            planes = GeometryUtility.CalculateFrustumPlanes(cam);
-            if (T < enemies.Count && enemies[T] != null) {
-                float enDist = EnDist(enemies[T].gameObject);
-                foreach (Enemy en in Enemies) {
-                    if (EnDist(en.gameObject) < enDist && GeometryUtility.TestPlanesAABB(planes, en.CharCon.bounds)) {//ReturnAngle(en) < closestAngle 
-                        T = Enemies.IndexOf(en);
-                        //if (enemies[T].Model.gameObject.GetComponentInChildren<SkinnedMeshRenderer>().isVisible)
-                        ClosestEnemy = en;
-                        EnemyTarget = en;
-                        //EnemyLockedTo();
-                    }
+        //if (Enemies.Count == 1) {
+        //    //if(enemies[T].Model.gameObject.GetComponentInChildren<SkinnedMeshRenderer>().isVisible)
+        //    ClosestEnemy = enemies[0];
+        //    T = 0;
+        //    EnemyLockedTo();
+        //}
+        //else {
+        if (T < enemies.Count && enemies[0] != null) {
+            float enDist = EnDist(enemies[0].gameObject);
+            foreach (Enemy en in enemies) {
+                if (EnDist(en.gameObject) < enDist) {//ReturnAngle(en) < closestAngle 
+                    T = Enemies.IndexOf(en);
+                    enDist = EnDist(en.gameObject);
+                    //if (enemies[T].Model.gameObject.GetComponentInChildren<SkinnedMeshRenderer>().isVisible)
+                    ClosestEnemy = en;
+                    
                 }
             }
+            EnemyLockedTo();
         }
+        //}
     }
 
     private float ReturnAngle(Enemy en) {
@@ -176,30 +189,6 @@ public class PlayerLockOn : MonoBehaviour
         float angle = Vector2.Angle(cameraFor, newTargetDir);
         return angle;
     }
-    //private void GetCombatMovement(float x, float y) {
-    //    if (x == 0 && y == 0) {
-    //        //Player.GetPlayer().CombatAnimations = 0;
-    //    }
-    //    if (x == 0) {
-    //        Debug.Log("Combat Jump");
-    //        if (y <= -0.3f) {
-    //            Debug.Log("Combat BackJump");
-    //            player.CombatAnimations = 1;
-    //        }
-    //        if (y >= 0.3f) {
-    //            Debug.Log("Combat BackJump");
-    //            player.CombatAnimations = 5;
-    //        }
-    //    }
-    //    if (y == 0) {
-    //        if (x <= -0.5f) {
-    //            player.CombatAnimations = 2;
-    //        }
-    //        if (x >= 0.5f) {
-    //            player.CombatAnimations = 3;
-    //        }
-    //    }
-    //}
     private float EnDist(GameObject target) => Vector3.Distance(target.transform.position, player.transform.position);
     private void SetLock() {
         rotLock = true;
@@ -224,22 +213,17 @@ public class PlayerLockOn : MonoBehaviour
         return Vector3.MoveTowards(position, transform.position, .95f);
     }
     private void LockOn(GameObject target) {
-        
         LockOff();
         EnemyLockedTo();
         if (target != null) {
             //target.LockedOn = true;
-            RotateSpeed = 18 - EnDist(target);
+            RotateSpeed = 18 - EnDist(target.gameObject);
             Vector3 delta = target.transform.position - player.transform.position;
             delta.y = 0;
-            //if (!rotLock && player.CharCon.isGrounded) {
-            transform.RotateAround(delta, Vector3.up, RotateSpeed);
+            if ( player.CharCon.isGrounded) {
+                print("bro your def locked on rn/");
                 transform.rotation = Quaternion.LookRotation(delta, Vector3.up);
-                print("is locked"); ;
-            //}
-        }
-        else {
-            print("target is null"); ;
+            }
         }
     }
     private void StayLockedToTarget() {

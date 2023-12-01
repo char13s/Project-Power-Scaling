@@ -675,6 +675,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 1
+  radius: 0
   aimIcon: {fileID: 0}
 --- !u!114 &550653983622431121
 MonoBehaviour:
@@ -688,6 +689,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 105b857e43c962a418ff6442897eb27c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pierceSword: {fileID: 0}
+  heavySwordPincer: {fileID: 0}
+  protectionSwing: {fileID: 0}
+  holdSwordProtection: {fileID: 0}
+  effectsPoint: {fileID: 0}
 --- !u!135 &2409527905548290478
 SphereCollider:
   m_ObjectHideFlags: 0

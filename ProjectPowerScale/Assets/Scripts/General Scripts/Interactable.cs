@@ -8,13 +8,15 @@ public abstract class Interactable : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
         //send timeline to playerInputs
         EnterEvent();
-        sendThis.Invoke(this);
+        if(sendThis!=null)
+            sendThis(this);
     }
     private void OnTriggerStay(Collider other) {
         //Interact();    
     }
     private void OnTriggerExit(Collider other) {
-        sendThis(null);
+        if (sendThis != null)
+            sendThis(null);
         ExitEvent();
     }
     public abstract void Interact();

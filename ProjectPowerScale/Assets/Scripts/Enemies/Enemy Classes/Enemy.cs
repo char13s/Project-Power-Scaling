@@ -109,8 +109,8 @@ public class Enemy : MonoBehaviour
     #region Getters and Setters
     public int Health { get { return stats.Health; } set { stats.Health = Mathf.Max(0, value); } }
     public int HealthLeft { get { return stats.HealthLeft; } set { stats.HealthLeft = Mathf.Max(0, value); UpdateParameters(); UIMaintence(); if (canvas != null) canvas.GetComponent<EnemyCanvas>().SetEnemyHealth(); if (stats.HealthLeft <= 0 && !dead) { Dead = true; } } }
-    public bool Attack { get => attack; set { attack = value; Anim.SetBool("Attack", attack); } }
-    protected bool Walk { get => walk; set { walk = value; Anim.SetBool("Walking", walk); } }
+    public bool Attack { get => attack; set { attack = value; } }
+    protected bool Walk { get => walk; set { walk = value;  } }
 
     public bool Hit {
         get => hit; set {
@@ -264,6 +264,7 @@ public class Enemy : MonoBehaviour
     public virtual void Update() {
         if (Zara != null)
             Distance = Vector3.Distance(Zara.transform.position, transform.position);
+        States();
         //if (status.Status != StatusEffects.Statuses.stunned && state != EnemyAiStates.Null) {
         //    //StateSwitch();
         //}
@@ -395,7 +396,7 @@ public class Enemy : MonoBehaviour
     #endregion
 
     #region State Logic
-    public void StateSwitch() {
+    public virtual void StateSwitch() {
         if (!Timelining) {
             if (HealthLeft < Health / 4) {
                 lowHealth = true;
@@ -492,7 +493,7 @@ public class Enemy : MonoBehaviour
         Walk = true;
         Vector3 delta = Zara.transform.position - transform.position;
         delta.y = 0;
-
+        print("bruh;");
         transform.rotation = Quaternion.LookRotation(delta);
         CharCon.Move(transform.forward * speed * Time.deltaTime);
     }
@@ -654,8 +655,8 @@ public class Enemy : MonoBehaviour
         }
         return dmg;
     }*/
-    public void CalculateAttack() {
-        Zara.stats.HealthLeft -= Mathf.Max(1, stats.Attack);
+    public void CalculateAttack(int extDmg) {
+        Zara.stats.HealthLeft -= Mathf.Max(1, stats.Attack+extDmg);
     }
     private void StaggerCheck() {
         print("Stagger check");

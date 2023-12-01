@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class HurtBox : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+//if (other.GetComponent<EnemyWeakerHit>()) {
+//            NewZend.GetPlayer().Anim.Play("WeakHitReaction");
+//        }
+//if (other.GetComponent<EnemyHeavyHitter>()) {
+//    NewZend.GetPlayer().Anim.Play("HeavyHitReaction");
+//}
 }
