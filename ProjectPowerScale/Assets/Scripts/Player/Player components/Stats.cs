@@ -5,19 +5,19 @@ using UnityEngine.Serialization;
 public class Stats
 {
     //Variables
-    private int health;
+    private float health;
     private int attack;
     private int defense;
 
     private int mp;
     private float speed;
-    private int healthLeft;
+    private float healthLeft;
 
     private int mpLeft;
     private byte level = 1;
     private int exp = 0;
     private int requiredExp;
-    private int transformationMod=1;
+    private float transformationMod=1;
     private int itemMod;
 
     private int baseAttack;
@@ -62,8 +62,8 @@ public class Stats
     public static event UnityAction decrease;
     //Properties
     #region Getters and Setters
-    public int Health { get { return health; } set { health = Mathf.Max(0, value); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
-    public int HealthLeft { get { return healthLeft; } set { healthLeft = Mathf.Clamp(value, 0, health); CalculateStatsOutput(); if (onHealthChange != null) { onHealthChange(); } } }
+    public float Health { get { return health; } set { health = Mathf.Max(0, value); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
+    public float HealthLeft { get { return healthLeft; } set { healthLeft = Mathf.Clamp(value, 0, health); CalculateStatsOutput(); if (onHealthChange != null) { onHealthChange(); } } }
     //public int MPLeft { get { return MpLeft; } set { MpLeft = Mathf.Clamp(value, 0, mp); CalculateStatsOutput(); if (onMPLeft != null) { onMPLeft(); } } }
 
     public int Attack { get { return attack; } set { attack = value; if (onBaseStatsUpdate != null) onBaseStatsUpdate(); } }
@@ -97,7 +97,7 @@ public class Stats
     public int FireLvl { get => fireLvl; set => fireLvl = value; }
     public int TeleportLvl { get => teleportLvl; set => teleportLvl = value; }
     public int TimeLvl { get => timeLvl; set => timeLvl = value; }
-    public int TransformationMod { get =>transformationMod;  set { Mathf.Clamp(transformationMod, 1, 10000); CalculateStatsOutput(); } }
+    public float TransformationMod { get =>transformationMod;  set { Mathf.Clamp(transformationMod, 1, 10000); CalculateStatsOutput(); } }
 
     public int CalculateExpNeed() { int expNeeded = 4 * (Level * Level * Level); return Mathf.Abs(Exp - expNeeded); }
     public int ExpCurrent() { return Exp - (4 * ((Level - 1) * (Level - 1) * (Level - 1))); }
@@ -164,7 +164,7 @@ public class Stats
         //Attack = (((healthLeft / 10) + (mpLeft)) * (baseAttack))+attackBoost*(healthLeft/health)); A simple one I didnt know how to make stronger
         //Attack = (((healthLeft / 10) + mpLeft) * (baseAttack) * transformationMod)+AttackBoost;  A chaotic one
         Health = (10 * mp);//Attack got taken out for simplicity
-        Attack= (mpLeft) * (healthLeft / health)* transformationMod;// Until I think of how to handle upgrading base attack values if theres time.
+        Attack=(int) ((mpLeft) * (healthLeft / health)* transformationMod);// Until I think of how to handle upgrading base attack values if theres time.
     }
     private void AddToAttackBoost(int val) {
         //Upgrading Attacks on Attack boost affect here

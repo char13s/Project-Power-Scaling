@@ -58,7 +58,7 @@ public class ZaraInput : MonoBehaviour
     private void OnJump() {
         if (player.LockedOn&&!player.Flying) {
             print("Locked JUMP");
-            anim.SetTrigger("Jump");
+            
         }
         print("Jump girl");
     }

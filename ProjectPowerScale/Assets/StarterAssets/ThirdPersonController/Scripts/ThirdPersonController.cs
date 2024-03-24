@@ -111,10 +111,8 @@ namespace StarterAssets
 
         private bool _hasAnimator;
 
-        private bool IsCurrentDeviceMouse
-        {
-            get
-            {
+        private bool IsCurrentDeviceMouse {
+            get {
 #if ENABLE_INPUT_SYSTEM
                 return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
@@ -124,19 +122,16 @@ namespace StarterAssets
         }
 
 
-        private void Awake()
-        {
+        private void Awake() {
             // get a reference to our main camera
-            if (_mainCamera == null)
-            {
+            if (_mainCamera == null) {
                 _mainCamera = Camera.main.gameObject;
             }
         }
 
-        private void Start()
-        {
+        private void Start() {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
+
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
@@ -154,18 +149,17 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
         }
 
-        private void Update()
-        {
+        private void Update() {
             _hasAnimator = TryGetComponent(out _animator);
-            if (!player.Flying) { 
+
             JumpAndGravity();
-            
+
             GroundedCheck();
-                Move();
-            }
-            else {
-                FlyingMove();
-            }
+            Move();
+
+    
+                //FlyingMove();
+            
         }
 
         private void LateUpdate()
@@ -379,7 +373,9 @@ namespace StarterAssets
                     // update animator if using character
                     if (_hasAnimator)
                     {
-                        _animator.SetBool(_animIDJump, true);
+                        player.Anim.SetTrigger("Jump");
+                        //_animator.SetBool(_animIDJump, true);
+                        //player.Anim.Play("JumpStart");
                     }
                 }
 
