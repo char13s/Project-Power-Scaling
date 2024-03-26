@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     private static Player instance;
 
     public static event UnityAction<bool> lockon;
+    public static event UnityAction onPlayerDeath;
 
     [SerializeField] private GameObject aimminPoint;
     [SerializeField] private GameObject body;
@@ -20,7 +21,7 @@ public class Player : MonoBehaviour
     Animator anim;
     CharacterController charCon;
     internal Stats stats = new Stats();
-    public bool LockedOn { get => lockedOn; set { lockedOn = value; Anim.SetBool("LockedOn",value); lockon.Invoke(value); } }
+    public bool LockedOn { get => lockedOn; set { lockedOn = value; Anim.SetBool("LockedOn",value);  } }
     public bool SkillsUp { get => skillsUp; set => skillsUp = value; }
     public GameObject AimminPoint { get => aimminPoint; set => aimminPoint = value; }
     public bool Attacking { get => attacking; set => attacking = value; }

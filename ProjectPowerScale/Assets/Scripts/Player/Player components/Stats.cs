@@ -4,6 +4,7 @@ using UnityEngine.Serialization;
 [System.Serializable]
 public class Stats
 {
+    
     //Variables
     private float health;
     private int attack;
@@ -18,7 +19,6 @@ public class Stats
     private int exp = 0;
     private int requiredExp;
     private float transformationMod=1;
-    private int itemMod;
 
     private int baseAttack;
     private int baseDefense;
@@ -30,21 +30,7 @@ public class Stats
     private int mpBoost;
     private int healthBoost;
 
-    private int swordLevel;
-    private int demonFistLevel;
-    private int swordProficency;
-
-    private byte kryllLevel;
-
     private int abilitypoints;
-
-    private int darkLvl;
-    private int electricLvl;
-    private int iceLvl;
-    private int lightLvl;
-    private int fireLvl;
-    private int teleportLvl;
-    private int timeLvl;
 
     //Events
     public static event UnityAction onHealthChange;
@@ -80,24 +66,13 @@ public class Stats
     public int DefenseBoost { get => defenseBoost; set { defenseBoost = Mathf.Clamp(value, 0, 9999999); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetStats(); } }
     public int MpBoost { get => mpBoost; set { mpBoost = Mathf.Clamp(value, 0, 9999999); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetStats(); } }
     public int HealthBoost { get => healthBoost; set { healthBoost = Mathf.Clamp(value, 0, 9999999); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetStats(); } }
-
     public int RequiredExp { get => requiredExp; set => requiredExp = value; }
     public int Abilitypoints { get => abilitypoints; set { abilitypoints = value; if (onBaseStatsUpdate != null) onBaseStatsUpdate(); if(onOrbGain!=null) onOrbGain(abilitypoints); } }
-
-    public int SwordProficency { get => swordProficency; set => swordProficency = value; }
-    public int SwordLevel { get => swordLevel; set => swordLevel = value; }
-    public byte KryllLevel { get => kryllLevel; set => kryllLevel = value; }
-    public int MPLeft { get => mpLeft; set { mpLeft = Mathf.Clamp(value, 1, mp); if(updateMP!=null) updateMP(MPLeft);
+    public int MPLeft { get => mpLeft; set { mpLeft = Mathf.Clamp(value, 1, mp); if(updateMP!=null) updateMP(MPLeft); SetSpeed();
             } }
-
-    public int DarkLvl { get => darkLvl; set => darkLvl = value; }
-    public int ElectricLvl { get => electricLvl; set => electricLvl = value; }
-    public int IceLvl { get => iceLvl; set => iceLvl = value; }
-    public int LightLvl { get => lightLvl; set => lightLvl = value; }
-    public int FireLvl { get => fireLvl; set => fireLvl = value; }
-    public int TeleportLvl { get => teleportLvl; set => teleportLvl = value; }
-    public int TimeLvl { get => timeLvl; set => timeLvl = value; }
     public float TransformationMod { get =>transformationMod;  set { Mathf.Clamp(transformationMod, 1, 10000); CalculateStatsOutput(); } }
+
+    public float Speed { get => speed; set { speed = Mathf.Clamp(value, 1, 1.5f); Player.GetPlayer().Anim.SetFloat("AttackSpeed",speed); } }
 
     public int CalculateExpNeed() { int expNeeded = 4 * (Level * Level * Level); return Mathf.Abs(Exp - expNeeded); }
     public int ExpCurrent() { return Exp - (4 * ((Level - 1) * (Level - 1) * (Level - 1))); }
@@ -113,16 +88,7 @@ public class Stats
     public void Start() {
         SetStats();
         CalculateStatsOutput();
-        // Player.weaponSwitch += SetStats;
-        //PerfectGuardBox.sendAmt += ChangeMpLeft;
-        //PlayerInputs.transformed += OnTransformation;
-        //SkillTreeNode.sendOrbs += AdjustOrbs;
         Enemy.sendOrbs += AdjustOrbs;
-        //PerfectGuardBox.sendAmt += AdjustMp;
-        //GuardBox.sendAmt += AdjustMp;
-        //HealRelic.heal += Heal;
-        //EnemyFireball.dmg += OutsideDamage;
-        //PlayerAnimationEvents.transform += OnTransformation;
         if (onHealthChange != null) {
             onHealthChange();
         }
@@ -154,6 +120,9 @@ public class Stats
         //onMPLeft.Invoke();
         //CalculateStatsOutput();
 
+    }
+    private void SetSpeed() {
+        Speed = 1 + (mpLeft / mp);
     }
     //private void ChangeMpLeft(int amt) => MPLeft += amt;
     private void CalculateStatsOutput() {

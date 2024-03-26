@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Collections;
 using System.Linq;
 using System;
+using UnityEngine.Events;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -23,8 +24,7 @@ namespace ThirdPersonCameraWithLockOn
 		public Transform XForm { get { return xForm; } set { xForm = value; } }
 
 
-		public void Init(string camName, Vector3 pos, Transform transform, Transform parent)
-		{
+		public void Init(string camName, Vector3 pos, Transform transform, Transform parent) {
 			position = pos;
 			xForm = transform;
 			xForm.name = camName;
@@ -98,8 +98,7 @@ namespace ThirdPersonCameraWithLockOn
 		[Tooltip("what object does the camera follow in the scene, if none the camera will find an onbject tagged 'Player'")]
 		private Transform follow;
 
-		public Transform Follow
-		{
+		public Transform Follow {
 			get { return follow; }
 			set { follow = value; }
 		}
@@ -107,33 +106,30 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		private bool inverseXAxis = true;
 
-		public bool InverseXAxis
-		{
+		public bool InverseXAxis {
 			get { return inverseXAxis; }
 			set { inverseXAxis = value; }
 		}
 		[SerializeField]
 		private bool inverseYAxis = false;
 
-		public bool InverseYAxis
-		{
+		public bool InverseYAxis {
 			get { return inverseYAxis; }
 			set { inverseYAxis = value; }
 		}
 
 		private GameObject lockOnTarget = null;
-		public GameObject LockOnTarget
-		{
+		public static event UnityAction<GameObject> sendTarget;
+		public GameObject LockOnTarget {
 			get { return lockOnTarget; }
-			set { lockOnTarget = value; }
+			set { lockOnTarget = value; if (sendTarget != null) { sendTarget(value); } }
 		}
 
 
 		private Vector3 lookAt;
 		//[SerializeField]
 		private CamStates camstate = CamStates.ThirdPersonCam;
-		public CamStates Camstate
-		{
+		public CamStates Camstate {
 			get { return camstate; }
 			set { camstate = value; }
 		}
@@ -158,19 +154,17 @@ namespace ThirdPersonCameraWithLockOn
 		[Header("Input")]
 
 #if ENABLE_INPUT_SYSTEM
-        private CameraInputActions cameraIA;
-        public CameraInputActions CameraIA
-        {
-            get { return cameraIA; }
-            private set { cameraIA = value; }
-        }
+		private CameraInputActions cameraIA;
+		public CameraInputActions CameraIA {
+			get { return cameraIA; }
+			private set { cameraIA = value; }
+		}
 #endif
 
 		[SerializeField]
 		[Tooltip("Input name for horizontal mouse movement")]
 		private string mouseInputX = "Mouse X";
-		public string MouseInputX
-		{
+		public string MouseInputX {
 			get { return mouseInputX; }
 			private set { mouseInputX = value; }
 		}
@@ -178,8 +172,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Input name for vertical mouse movement")]
 		private string mouseInputY = "Mouse Y";
-		public string MouseInputY
-		{
+		public string MouseInputY {
 			get { return mouseInputY; }
 			private set { mouseInputY = value; }
 		}
@@ -187,8 +180,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Input name for horizontal right joystick movement")]
 		public string rightStickX = "RightStickX";
-		public string RightStickX
-		{
+		public string RightStickX {
 			get { return rightStickX; }
 			set { rightStickX = value; }
 		}
@@ -196,8 +188,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Input name for vertical right joystick movement")]
 		public string rightStickY = "RightStickY";
-		public string RightStickY
-		{
+		public string RightStickY {
 			get { return rightStickY; }
 			set { rightStickY = value; }
 		}
@@ -207,24 +198,21 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Enable the Lock On function")]
 		private bool enableLockOn = true;
-		public bool EnableLockOn
-		{
+		public bool EnableLockOn {
 			get { return enableLockOn; }
 			set { enableLockOn = value; }
 		}
 		[SerializeField]
 		[Tooltip("Enable the Camera Reset function")]
 		private bool enableCamReset = true;
-		public bool EnableCamReset
-		{
+		public bool EnableCamReset {
 			get { return enableCamReset; }
 			set { enableCamReset = value; }
 		}
 		[SerializeField]
 		[Tooltip("Enable the Change Traget function")]
 		private bool enableChangeTarget = true;
-		public bool EnableChangeTarget
-		{
+		public bool EnableChangeTarget {
 			get { return enableChangeTarget; }
 			set { enableChangeTarget = value; }
 		}
@@ -233,26 +221,24 @@ namespace ThirdPersonCameraWithLockOn
 		[Space(10)]
 #if ENABLE_INPUT_SYSTEM
 
-        //for testing purposes
-        [SerializeField]
-        [Tooltip("Input methods to use: Keycodes, Input manager or the new Unity Input system package")]
-        private InputType cameraInputType = InputType.InputSystem;
-        public InputType CameraInputType
-        {
-            get { return cameraInputType; }
-            set { cameraInputType = value; }
-        }
+		//for testing purposes
+		[SerializeField]
+		[Tooltip("Input methods to use: Keycodes, Input manager or the new Unity Input system package")]
+		private InputType cameraInputType = InputType.InputSystem;
+		public InputType CameraInputType {
+			get { return cameraInputType; }
+			set { cameraInputType = value; }
+		}
 
 
-        [SerializeField]
+		[SerializeField]
 		[DrawIf("cameraInputType", InputType.InputSystem)]
-        [Tooltip("Whether the input system should use the CameraInputActions script, or a custom Player Input component")]
-        private bool inputSystemUseScript = true;
-        public bool InputSystemUseScript
-        {
-            get { return inputSystemUseScript; }
-            set { inputSystemUseScript = value; }
-        }
+		[Tooltip("Whether the input system should use the CameraInputActions script, or a custom Player Input component")]
+		private bool inputSystemUseScript = true;
+		public bool InputSystemUseScript {
+			get { return inputSystemUseScript; }
+			set { inputSystemUseScript = value; }
+		}
 #else
 		[SerializeField]
 		[Tooltip("Input methods to use: Keycodes, Input manager or the new Unity Input system package")]
@@ -268,8 +254,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Key codes for the camera reset function")]
 		private KeyCode[] cameraResetKeyCodes = new KeyCode[] { KeyCode.T, KeyCode.Joystick1Button9 };
-		public KeyCode[] CameraResetKeyCodes
-		{
+		public KeyCode[] CameraResetKeyCodes {
 			get { return cameraResetKeyCodes; }
 			private set { cameraResetKeyCodes = value; }
 		}
@@ -277,8 +262,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Key codes for the lock on function")]
 		private KeyCode[] lockOnKeyCodes = new KeyCode[] { KeyCode.LeftShift, KeyCode.Joystick1Button5 };
-		public KeyCode[] LockOnKeyCodes
-		{
+		public KeyCode[] LockOnKeyCodes {
 			get { return lockOnKeyCodes; }
 			private set { lockOnKeyCodes = value; }
 		}
@@ -286,8 +270,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Key codes for the change targets function")]
 		private KeyCode[] changeTargetKeyCodes = new KeyCode[] { KeyCode.LeftControl, KeyCode.Joystick1Button8 };
-		public KeyCode[] ChangeTargetKeyCodes
-		{
+		public KeyCode[] ChangeTargetKeyCodes {
 			get { return changeTargetKeyCodes; }
 			private set { changeTargetKeyCodes = value; }
 		}
@@ -295,8 +278,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Key codes to cycle back through targets")]
 		private KeyCode[] previousTargetKeyCodes = new KeyCode[] { KeyCode.LeftAlt };
-		public KeyCode[] PreviousTargetKeyCodes
-		{
+		public KeyCode[] PreviousTargetKeyCodes {
 			get { return previousTargetKeyCodes; }
 			private set { previousTargetKeyCodes = value; }
 		}
@@ -307,8 +289,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraInputType", InputType.InputManager)]
 		[Tooltip("Input name for the reset camera funcion")]
 		public string cameraResetButton = "CamReset";
-		public string CameraResetButton
-		{
+		public string CameraResetButton {
 			get { return cameraResetButton; }
 			set { cameraResetButton = value; }
 		}
@@ -317,8 +298,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraInputType", InputType.InputManager)]
 		[Tooltip("Input name for the lock on function")]
 		public string lockOnButton = "LockOn";
-		public string LockOnButton
-		{
+		public string LockOnButton {
 			get { return lockOnButton; }
 			set { lockOnButton = value; }
 		}
@@ -327,8 +307,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraInputType", InputType.InputManager)]
 		[Tooltip("Input name for changing lock on targets")]
 		public string changeTargetsButton = "ChangeTargets";
-		public string ChangeTargetsButton
-		{
+		public string ChangeTargetsButton {
 			get { return changeTargetsButton; }
 			set { changeTargetsButton = value; }
 		}
@@ -337,8 +316,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraInputType", InputType.InputManager)]
 		[Tooltip("Input name for changing lock on targets")]
 		public string previousTargetButton = "ChangeTargets";
-		public string PreviousTargetButton
-		{
+		public string PreviousTargetButton {
 			get { return previousTargetButton; }
 			set { previousTargetButton = value; }
 		}
@@ -348,8 +326,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Switch control between mouse and controller when input is detected")]
 		private bool dynamicControlTypeDetection = false;
-		public bool DynamicControlTypeDetection
-		{
+		public bool DynamicControlTypeDetection {
 			get { return dynamicControlTypeDetection; }
 			set { dynamicControlTypeDetection = value; }
 		}
@@ -359,8 +336,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("dynamicControlTypeDetection", false)]
 		[Tooltip("Use controller to move the camera, Note: not compatible with usingMouse option")]
 		private bool usingController = false;
-		public bool UsingController
-		{
+		public bool UsingController {
 			get { return usingController; }
 			set { usingController = value; }
 		}
@@ -370,8 +346,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("dynamicControlTypeDetection", false)]
 		[Tooltip("Use mouse to move the camera, Note: not compatible with usingController option")]
 		private bool usingMouse = true;
-		public bool UsingMouse
-		{
+		public bool UsingMouse {
 			get { return usingMouse; }
 			set { usingMouse = value; }
 		}
@@ -388,11 +363,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("The default angle for the camera in ThirdPersonCam mode, this is also used to calculate lockon camera angle")]
 		private float defaultYAngle = 20f;
-		public float DefaultYAngle
-		{
+		public float DefaultYAngle {
 			get { return defaultYAngle; }
-			set
-			{
+			set {
 				defaultYAngle = Mathf.Clamp(value, -89f, 89f);
 			}
 		}
@@ -400,11 +373,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Distance between the camera and the target in ThirdPersonCam mode, this is also used to calculate lockon camera distance")]
 		private float distance = 6f;
-		public float Distance
-		{
+		public float Distance {
 			get { return distance; }
-			set
-			{
+			set {
 				distance = Mathf.Max(value, 0.01f);
 			}
 		}
@@ -412,11 +383,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Camera X axis turn speed")]
 		private float xSpeed = 1.0f;
-		public float XSpeed
-		{
+		public float XSpeed {
 			get { return xSpeed; }
-			set
-			{
+			set {
 				xSpeed = Mathf.Max(value, 0f);
 			}
 		}
@@ -424,11 +393,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Camera Y axis turn speed")]
 		private float ySpeed = 1.0f;
-		public float YSpeed
-		{
+		public float YSpeed {
 			get { return ySpeed; }
-			set
-			{
+			set {
 				ySpeed = Mathf.Max(value, 0f);
 			}
 		}
@@ -436,8 +403,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Don't change cameras y position when colliding (controllers only), makes the camera maintain its original height")]
 		private bool lockCameraYDuringCollision = true;
-		public bool LockCameraYDuringCollision
-		{
+		public bool LockCameraYDuringCollision {
 			get { return lockCameraYDuringCollision; }
 			set { lockCameraYDuringCollision = value; }
 		}
@@ -445,8 +411,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Will the camera lerp to its default angle of viewing When the player lets go of the camera analog? (Doesn't work with mouse controls")]
 		private bool lerpCameraToDefault = true;
-		public bool LerpCameraToDefault
-		{
+		public bool LerpCameraToDefault {
 			get { return lerpCameraToDefault; }
 			set { lerpCameraToDefault = value; }
 		}
@@ -454,11 +419,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("How fast does the camera lerp to default angle")]
 		private float yLerpSpeed = 20f;
-		public float YLerpSpeed
-		{
+		public float YLerpSpeed {
 			get { return yLerpSpeed; }
-			set
-			{
+			set {
 				yLerpSpeed = Mathf.Max(value, 0f);
 			}
 		}
@@ -467,11 +430,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Camera Y axis angle limit min, cameras angle cannot be lower then this in ThirdPersonCam mode")]
 		private float yMinLimit = -10f;
-		public float YMinLimit
-		{
+		public float YMinLimit {
 			get { return yMinLimit; }
-			set
-			{
+			set {
 				yMinLimit = Mathf.Max(value, -89f);
 			}
 		}
@@ -479,11 +440,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Camera Y axis angle limit min, cameras angle cannot be higher then this in ThirdPersonCam mode")]
 		private float yMaxLimit = 50f;
-		public float YMaxLimit
-		{
+		public float YMaxLimit {
 			get { return yMaxLimit; }
-			set
-			{
+			set {
 				yMaxLimit = Mathf.Min(value, 89f);
 			}
 		}
@@ -491,11 +450,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Turn on use of soft limits, soft limits lerp the camera back below them when no camera input is detected, controller only")]
 		private bool useSoftLimits = false;
-		public bool UseSoftLimits
-		{
+		public bool UseSoftLimits {
 			get { return useSoftLimits; }
-			set
-			{
+			set {
 				useSoftLimits = value;
 			}
 		}
@@ -505,11 +462,9 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("useSoftLimits", true)]
 		[Tooltip("Camera Y axis angle min soft limit, camera can move below this value but will lerp back when controller camera input is released, needs Use Soft Limits enabled")]
 		private float yMinSoftLimit = 20f;
-		public float YMinSoftLimit
-		{
+		public float YMinSoftLimit {
 			get { return yMinSoftLimit; }
-			set
-			{
+			set {
 				yMinSoftLimit = Mathf.Max(value, -89f);
 			}
 		}
@@ -518,11 +473,9 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("useSoftLimits", true)]
 		[Tooltip("Camera Y axis angle max soft limit, camera can move above this value but will lerp back when controller camera input is released, needs Use Soft Limits enabled")]
 		private float yMaxSoftLimit = 20f;
-		public float YMaxSoftLimit
-		{
+		public float YMaxSoftLimit {
 			get { return yMaxSoftLimit; }
-			set
-			{
+			set {
 				yMaxSoftLimit = Mathf.Min(value, 89f);
 			}
 		}
@@ -532,8 +485,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Offset the camera look at target when in free cam mode, the camera will look at relative to the player origin, with this u can set the camera look at target a point relative to player characetr origin")]
 		public Vector3 lookoffset = new Vector3(0, 2.5f, 0);
-		public Vector3 Lookoffset
-		{
+		public Vector3 Lookoffset {
 			get { return lookoffset; }
 			private set { lookoffset = value; }
 		}
@@ -541,11 +493,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("How fast does the camera look thowards a new target when rotating in third person mode")]
 		private float thirdPersonLookSpeed = 5f;
-		public float ThirdPersonLookSpeed
-		{
+		public float ThirdPersonLookSpeed {
 			get { return thirdPersonLookSpeed; }
-			set
-			{
+			set {
 				thirdPersonLookSpeed = Mathf.Max(value, 0f);
 			}
 		}
@@ -554,8 +504,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Smooth time for the camera movement")]
 		private float camSmoothDampTime = 0.06f;
-		public float CamSmoothDampTime
-		{
+		public float CamSmoothDampTime {
 			get { return camSmoothDampTime; }
 			private set { camSmoothDampTime = Mathf.Max(0, camSmoothDampTime); }
 		}
@@ -563,8 +512,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Smooth time for the camera movement when avoiding clipping (should be lower then cam smooth damp time)")]
 		private float camClippingSmoothDampTime = 0.04f;
-		public float CamClippingSmoothDampTime
-		{
+		public float CamClippingSmoothDampTime {
 			get { return camClippingSmoothDampTime; }
 			private set { camClippingSmoothDampTime = Mathf.Max(0, camClippingSmoothDampTime); }
 		}
@@ -572,8 +520,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Margins of the Boxcast for camera collision (0 = camera near clip plane dimensions")]
 		private float collisionMargin = 0.05f;
-		public float CollisionMargin
-		{
+		public float CollisionMargin {
 			get { return collisionMargin; }
 			set { collisionMargin = Mathf.Max(0, value); }
 		}
@@ -581,8 +528,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Layers that are obstacles to the camera")]
 		private LayerMask camObstacle;
-		public LayerMask CamObstacle
-		{
+		public LayerMask CamObstacle {
 			get { return camObstacle; }
 			set { camObstacle = value; }
 		}
@@ -593,13 +539,11 @@ namespace ThirdPersonCameraWithLockOn
 		[Header("Lock On Properties")]
 
 		[SerializeField]
-		[Tooltip("Whether te camera can be manually controled in lock on mode or not, when off the camera will stick to the characters back")]
+		[Tooltip("Whether the camera can be manually controled in lock on mode or not, when off the camera will stick to the characters back")]
 		private bool lockOnManualControl = true;
-		public bool LockOnManualControl
-		{
+		public bool LockOnManualControl {
 			get { return lockOnManualControl; }
-			set
-			{
+			set {
 				lockOnManualControl = value;
 			}
 		}
@@ -607,8 +551,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Tag by which Lock-onable gameobjects are identified")]
 		public string lockOnTargetsTag = "LockOnTarget";
-		public string LockOnTargetsTag
-		{
+		public string LockOnTargetsTag {
 			get { return lockOnTargetsTag; }
 			set { lockOnTargetsTag = value; }
 		}
@@ -616,24 +559,21 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Whether the lock on button is a toggle or hold to engage")]
 		private bool lockOnToggle = true;
-		public bool LockOnToggle
-		{
+		public bool LockOnToggle {
 			get { return lockOnToggle; }
 			set { lockOnToggle = value; }
 		}
 
 		// set when the lock on toggle is active (except during cooldown)
 		private bool lockOnToggleEngaged = false;
-		public bool LockOnToggleEngaged
-		{
+		public bool LockOnToggleEngaged {
 			get { return lockOnToggleEngaged; }
 			set { lockOnToggleEngaged = value; }
 		}
 
 		// set when the lock on toggle is pressed this frame
 		private bool lockOnTogglePressed = false;
-		public bool LockOnTogglePressed
-		{
+		public bool LockOnTogglePressed {
 			get { return lockOnTogglePressed; }
 			set { lockOnTogglePressed = value; }
 		}
@@ -646,8 +586,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("lockOnManualControl", false)]
 		[Tooltip("Use the right stick / mouse to change enemy targets")]
 		private bool axisTargetChange = false;
-		public bool AxisTargetChange
-		{
+		public bool AxisTargetChange {
 			get { return axisTargetChange; }
 			set { axisTargetChange = value; }
 		}
@@ -658,8 +597,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("axisTargetChange", true)]
 		[Tooltip("Threshold for right stick movement to initiate changing target")]
 		private float axisTargetChangeThreshold = 0.3f;
-		public float AxisTargetChangeThreshold
-		{
+		public float AxisTargetChangeThreshold {
 			get { return axisTargetChangeThreshold; }
 			set { axisTargetChangeThreshold = Mathf.Max(0.1f, value); }
 		}
@@ -668,8 +606,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("axisTargetChange", true)]
 		[Tooltip("Cone of the aim direction for target switching with right stick, a target must be in this cone to make the switch")]
 		private float axisTargetChangeAngleCone = 45f;
-		public float AxisTargetChangeAngleCone
-		{
+		public float AxisTargetChangeAngleCone {
 			get { return axisTargetChangeAngleCone; }
 			set { axisTargetChangeAngleCone = Mathf.Max(1.0f, value); }
 		}
@@ -678,8 +615,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("axisTargetChange", true)]
 		[Tooltip("Cooldown after switching target preventing another switch")]
 		private float switchTargetCooldownTime = 0.2f;
-		public float SwitchTargetCooldownTime
-		{
+		public float SwitchTargetCooldownTime {
 			get { return switchTargetCooldownTime; }
 			set { switchTargetCooldownTime = value; }
 		}
@@ -688,8 +624,7 @@ namespace ThirdPersonCameraWithLockOn
 		/// bool used to allow switch target by right stick after cooldown
 		/// </summary>
 		private bool switchTargetCooldown = false;
-		public bool SwitchTargetCooldown
-		{
+		public bool SwitchTargetCooldown {
 			get { return switchTargetCooldown; }
 			set { switchTargetCooldown = value; }
 		}
@@ -699,8 +634,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Algorithm for choosing which target to lock on to")]
 		private LockOnSortAlgorithm lockOnSortAlgorithmType = LockOnSortAlgorithm.ByDistanceFromFollow;
-		public LockOnSortAlgorithm LockOnSortAlgorithmType
-		{
+		public LockOnSortAlgorithm LockOnSortAlgorithmType {
 			get { return lockOnSortAlgorithmType; }
 			set { lockOnSortAlgorithmType = value; }
 		}
@@ -709,8 +643,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("When off the camera will only look at the target but not move from its third person position")]
 		private bool experimentalTurnOffAutomaticDistanceCalculation = false;
-		public bool ExperimentalTurnOffAutomaticDistanceCalculation
-		{
+		public bool ExperimentalTurnOffAutomaticDistanceCalculation {
 			get { return experimentalTurnOffAutomaticDistanceCalculation; }
 			set { experimentalTurnOffAutomaticDistanceCalculation = value; }
 		}
@@ -718,8 +651,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Will the lock on disingage if angles get too steep")]
 		private bool experimentalLockOnDisingageOnSteepAngle = false;
-		public bool LockOnDisingageOnSteepAngle
-		{
+		public bool LockOnDisingageOnSteepAngle {
 			get { return experimentalLockOnDisingageOnSteepAngle; }
 			set { experimentalLockOnDisingageOnSteepAngle = value; }
 		}
@@ -728,11 +660,9 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("experimentalLockOnDisingageOnSteepAngle", true)]
 		[Tooltip("Min angle when reached to disingage lockon")]
 		private float experimentalLockOnDisingageMinAngle = -10f;
-		public float ExperimentalLockOnDisingageMinAngle
-		{
+		public float ExperimentalLockOnDisingageMinAngle {
 			get { return experimentalLockOnDisingageMinAngle; }
-			set
-			{
+			set {
 				experimentalLockOnDisingageMinAngle = Mathf.Max(value, -89f);
 			}
 		}
@@ -741,11 +671,9 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("experimentalLockOnDisingageOnSteepAngle", true)]
 		[Tooltip("Min angle when reached to disingage lockon")]
 		private float experimentalLockOnDisingageMaxAngle = 50f;
-		public float ExperimentalLockOnDisingageMaxAngle
-		{
+		public float ExperimentalLockOnDisingageMaxAngle {
 			get { return experimentalLockOnDisingageMaxAngle; }
-			set
-			{
+			set {
 				experimentalLockOnDisingageMaxAngle = Mathf.Min(value, 89f);
 			}
 		}
@@ -754,11 +682,9 @@ namespace ThirdPersonCameraWithLockOn
 		[Range(0.1f, 1.0f)]
 		[Tooltip("The interpolated look at target between the follow character and the target (0 meaning look at the character, and 1 meaning look at the target)")]
 		private float lockOnFollowToTargetRatio = 0.5f;
-		public float LockOnFollowToTargetRatio
-		{
+		public float LockOnFollowToTargetRatio {
 			get { return lockOnFollowToTargetRatio; }
-			set
-			{
+			set {
 				lockOnFollowToTargetRatio = Mathf.Clamp(value, 0.0f, 1.0f);
 			}
 		}
@@ -768,11 +694,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("How far from the camera can the lock on target be? 0 means infinite")]
 		private float lockOnDistanceLimit = 0f;
-		public float LockOnDistanceLimit
-		{
+		public float LockOnDistanceLimit {
 			get { return lockOnDistanceLimit; }
-			set
-			{
+			set {
 				lockOnDistanceLimit = Mathf.Max(value, 0f);
 			}
 		}
@@ -781,8 +705,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Disingage Lock On when the locked on target is outside Lock On Distance Limit")]
 		private bool breakLockOnWhenOutOfRange = false;
-		public bool BreakLockOnWhenOutOfRange
-		{
+		public bool BreakLockOnWhenOutOfRange {
 			get { return breakLockOnWhenOutOfRange; }
 			set { breakLockOnWhenOutOfRange = value; }
 		}
@@ -790,8 +713,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Cannot lock on to target that isnt Visible")]
 		private bool dissalowLockOnToTargetOutsideView = false;
-		public bool DissalowLockOnToTargetOutsideView
-		{
+		public bool DissalowLockOnToTargetOutsideView {
 			get { return dissalowLockOnToTargetOutsideView; }
 			set { dissalowLockOnToTargetOutsideView = value; }
 		}
@@ -799,8 +721,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Disallow engaging lock on if the target ios behind a cam obstacle, note: this only disallows lock on engage, a locked on target wont be disingaged if it goes behind a wall")]
 		private bool disallowLockingOnToTargetBehindWall = true;
-		public bool DisallowLockingOnToTargetBehindWall
-		{
+		public bool DisallowLockingOnToTargetBehindWall {
 			get { return disallowLockingOnToTargetBehindWall; }
 			set { disallowLockingOnToTargetBehindWall = value; }
 		}
@@ -809,13 +730,10 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("disallowLockingOnToTargetBehindWall", true)]
 		[Tooltip("disengages lock on when target gets obscured")]
 		private bool breakLockOnWhenTargetBehindWall = false;
-		public bool BreakLockOnWhenTargetBehindWall
-		{
+		public bool BreakLockOnWhenTargetBehindWall {
 			get { return BreakLockOnWhenTargetBehindWall; }
-			set
-			{
-				if (value != BreakLockOnWhenTargetBehindWall)
-				{
+			set {
+				if (value != BreakLockOnWhenTargetBehindWall) {
 					BreakLockOnWhenTargetBehindWall = value;
 					//if (value == true) StartCoroutine("LockOnBehindWallTimer");	
 					//else StopCoroutine("LockOnBehindWallTimer");	
@@ -826,8 +744,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Disallow engaging lock on if the target is not in the players line of sight")]
 		private bool disallowLockingOnToTargetNotInPlayerLineOfSight = false;
-		public bool DisallowLockingOnToTargetNotInPlayerLineOfSight
-		{
+		public bool DisallowLockingOnToTargetNotInPlayerLineOfSight {
 			get { return disallowLockingOnToTargetNotInPlayerLineOfSight; }
 			set { disallowLockingOnToTargetNotInPlayerLineOfSight = value; }
 		}
@@ -838,8 +755,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("disallowLockingOnToTargetNotInPlayerLineOfSight", true)]
 		[Tooltip("Optional: set custom line of sight starting location, if unset the camera will use the look offset")]
 		private Transform optionalPlayerLineOfSightStart;
-		public Transform OptionalPlayerLineOfSightStart
-		{
+		public Transform OptionalPlayerLineOfSightStart {
 			get { return optionalPlayerLineOfSightStart; }
 			set { optionalPlayerLineOfSightStart = value; }
 		}
@@ -856,14 +772,12 @@ namespace ThirdPersonCameraWithLockOn
 
 
 		private GameObject[] lockOnTargets;
-		public GameObject[] LockOnTargets
-		{
+		public GameObject[] LockOnTargets {
 			get { return lockOnTargets; }
 			set { lockOnTargets = value; }
 		}
 		private int lockOnCurrent = 0;
-		public int LockOnCurrent
-		{
+		public int LockOnCurrent {
 			get { return lockOnCurrent; }
 			set { lockOnCurrent = value; }
 		}
@@ -873,8 +787,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Optional, use a graphic over the locked on gameobject when lockon is active")]
 		private RectTransform lockOnReticle;
-		public RectTransform LockOnReticle
-		{
+		public RectTransform LockOnReticle {
 			get { return lockOnReticle; }
 			set { lockOnReticle = value; }
 		}
@@ -882,8 +795,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Display Lock On Reticle when holding Lock On in off mode")]
 		private bool lockOnReticleWorksWithOffMode = false;
-		public bool LockOnReticleWorksWithOffMode
-		{
+		public bool LockOnReticleWorksWithOffMode {
 			get { return lockOnReticleWorksWithOffMode; }
 			set { lockOnReticleWorksWithOffMode = value; }
 		}
@@ -892,11 +804,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("How fast does the lock on reticle grow to full size")]
 		private float lockonAnimSpeed = 30f;
-		public float LockonAnimSpeed
-		{
+		public float LockonAnimSpeed {
 			get { return lockonAnimSpeed; }
-			set
-			{
+			set {
 				lockonAnimSpeed = Mathf.Max(value, 0f);
 			}
 		}
@@ -904,11 +814,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("How fast does the camera look thowards a new target when turning on lockon")]
 		private float lockOnLookSpeed = 5f;
-		public float LockOnLookSpeed
-		{
+		public float LockOnLookSpeed {
 			get { return lockOnLookSpeed; }
-			set
-			{
+			set {
 				lockOnLookSpeed = Mathf.Max(value, 0f);
 			}
 		}
@@ -932,11 +840,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Distance below which the camera can rotate 360 in lock on mode, above this distance camera can only rotate a limited angle around the character")]
 		private float lockOnCameraFullRotationMaxDistance = 16;
-		public float LockOnCameraFullRotationMaxDistance
-		{
+		public float LockOnCameraFullRotationMaxDistance {
 			get { return lockOnCameraFullRotationMaxDistance; }
-			set
-			{
+			set {
 				lockOnCameraFullRotationMaxDistance = Mathf.Max(value, 0f);
 			}
 		}
@@ -949,11 +855,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Transition speed between full rotation and limited rotation algorithms")]
 		private float farCamTransitionSpeed = 1000f;
-		public float FarCamTransitionSpeed
-		{
+		public float FarCamTransitionSpeed {
 			get { return farCamTransitionSpeed; }
-			set
-			{
+			set {
 				farCamTransitionSpeed = Mathf.Max(value, 0f);
 			}
 		}
@@ -965,11 +869,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("When disingaging lockon, the camera doesnt move into the next mode for this amount of time (helps dealing with rapid lockon spamming), off for lock on toggle")]
 		private float lockOnCoolDownTime = 0.5f;
-		public float LockOnCoolDownTime
-		{
+		public float LockOnCoolDownTime {
 			get { return lockOnCoolDownTime; }
-			set
-			{
+			set {
 				lockOnCoolDownTime = Mathf.Max(value, 0f);
 			}
 		}
@@ -978,11 +880,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("In lockon, keeps the character above the screen bottom by this floor distance")]
 		private float lockOnScreenBottomMargin = 0.6f;
-		public float LockOnScreenBottomMargin
-		{
+		public float LockOnScreenBottomMargin {
 			get { return lockOnScreenBottomMargin; }
-			set
-			{
+			set {
 				lockOnScreenBottomMargin = Mathf.Max(value, 0f);
 			}
 		}
@@ -990,11 +890,9 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("In lock on, while far cam is active, the player can only rotate the camera a specific angle range, this value determines how far inbetween the middle and the border can the player character go")]
 		private float lockOnRotationRangePercent = 40f;
-		public float LockOnRotationRangePercent
-		{
+		public float LockOnRotationRangePercent {
 			get { return lockOnRotationRangePercent; }
-			set
-			{
+			set {
 				lockOnRotationRangePercent = Mathf.Max(value, 0f);
 			}
 		}
@@ -1003,8 +901,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Stop the camera going up with the player when the player is jumping in Lock On mode, it is necerrsary to call UpdateJumpingStatus(bool isJumping) and update the jumping statusfor this to work, see SimpleCharacetrController for example")]
 		private bool stopCameraFollowingYWhenPlayerIsJumping = true;
-		public bool StopCameraFollowingYWhenPlayerIsJumping
-		{
+		public bool StopCameraFollowingYWhenPlayerIsJumping {
 			get { return stopCameraFollowingYWhenPlayerIsJumping; }
 			set { stopCameraFollowingYWhenPlayerIsJumping = value; }
 		}
@@ -1022,8 +919,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Turn On/Off the Camera fade algorith that fades objects that are inbetween the player and the camera")]
 		private bool cameraFadeObjects = true;
-		public bool CameraFadeObjects
-		{
+		public bool CameraFadeObjects {
 			get { return cameraFadeObjects; }
 			set { cameraFadeObjects = value; }
 		}
@@ -1032,8 +928,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraFadeObjects", true)]
 		[Tooltip("Layer of objects that fade when they are infront of the camera")]
 		private LayerMask cameraFadeLayer;
-		public LayerMask CameraFadeLayer
-		{
+		public LayerMask CameraFadeLayer {
 			get { return cameraFadeLayer; }
 			set { cameraFadeLayer = value; }
 		}
@@ -1052,11 +947,9 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraFadeObjects", true)]
 		[Tooltip("Radius of the spherecast that determines if an object is infront of the camera and needs to be faded")]
 		private float fadeObjectsSpherecastRadius = 0.6f;
-		public float FadeObjectsSpherecastRadius
-		{
+		public float FadeObjectsSpherecastRadius {
 			get { return fadeObjectsSpherecastRadius; }
-			set
-			{
+			set {
 				fadeObjectsSpherecastRadius = Mathf.Max(value, 0f);
 			}
 		}
@@ -1067,8 +960,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraFadeObjects", true)]
 		[Tooltip("Cam Fade object will always be fully transparent if infront of the camera")]
 		private bool alwaysFullyTransparent = false;
-		public bool AlwaysFullyTransparent
-		{
+		public bool AlwaysFullyTransparent {
 			get { return alwaysFullyTransparent; }
 			set { alwaysFullyTransparent = value; }
 		}
@@ -1077,11 +969,9 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraFadeObjects", true)]
 		[Tooltip("Distance between the camera and a camFade object in which the cameFade object becomes fully transparent, futher then that distance the objects transparecncy is calculated using distance")]
 		private float fullTransparencyDistance = 2f;
-		public float FullTransparencyDistance
-		{
+		public float FullTransparencyDistance {
 			get { return fullTransparencyDistance; }
-			set
-			{
+			set {
 				fullTransparencyDistance = Mathf.Max(value, 0f);
 			}
 		}
@@ -1090,17 +980,13 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraFadeObjects", true)]
 		[Tooltip("Fade in speed , 0 means instant")]
 		private float fadeInSpeed = 10f;
-		public float FadeInSpeed
-		{
+		public float FadeInSpeed {
 			get { return fadeInSpeed; }
-			set
-			{
-				if (value < 0f)
-				{
+			set {
+				if (value < 0f) {
 					fadeInSpeed = 0f;
 				}
-				else
-				{
+				else {
 					fadeInSpeed = value;
 				}
 			}
@@ -1110,17 +996,13 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraFadeObjects", true)]
 		[Tooltip("Fade out speed, 0 means instant")]
 		private float fadeOutSpeed = 10f;
-		public float FadeOutSpeed
-		{
+		public float FadeOutSpeed {
 			get { return fadeOutSpeed; }
-			set
-			{
-				if (value < 0f)
-				{
+			set {
+				if (value < 0f) {
 					fadeOutSpeed = 0f;
 				}
-				else
-				{
+				else {
 					fadeOutSpeed = value;
 				}
 			}
@@ -1132,8 +1014,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraFadeObjects", true)]
 		[Tooltip("Fade player to transparent when the camera gets within Player Fade Distance")]
 		private bool fadePlayerWhenClose = true;
-		public bool FadePlayerWhenClose
-		{
+		public bool FadePlayerWhenClose {
 			get { return fadePlayerWhenClose; }
 			set { fadePlayerWhenClose = value; }
 		}
@@ -1142,17 +1023,13 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraFadeObjects", true)]
 		[Tooltip("Distance at which the follow object fades to transparent")]
 		private float playerFadeDistance = 1f;
-		public float PlayerFadeDistance
-		{
+		public float PlayerFadeDistance {
 			get { return playerFadeDistance; }
-			set
-			{
-				if (playerFadeDistance < 0f)
-				{
+			set {
+				if (playerFadeDistance < 0f) {
 					playerFadeDistance = 0f;
 				}
-				else
-				{
+				else {
 					playerFadeDistance = value;
 				}
 			}
@@ -1162,8 +1039,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("cameraFadeObjects", true)]
 		[Tooltip("Shader to use when fading out")]
 		private Shader fadeShader;
-		public Shader FadeShader
-		{
+		public Shader FadeShader {
 			get { return fadeShader; }
 			set { fadeShader = value; }
 		}
@@ -1177,8 +1053,7 @@ namespace ThirdPersonCameraWithLockOn
 		[SerializeField]
 		[Tooltip("Turn on debug (must be true for the other debugs to work")]
 		private bool debugOn = true;
-		public bool DebugOn
-		{
+		public bool DebugOn {
 			get { return debugOn; }
 			set { debugOn = value; }
 		}
@@ -1189,8 +1064,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("debugOn", true)]
 		[Tooltip("Draw third person debug lines")]
 		private bool debugThirdPersonMode = false;
-		public bool DebugThirdPersonMode
-		{
+		public bool DebugThirdPersonMode {
 			get { return debugThirdPersonMode; }
 			set { debugThirdPersonMode = value; }
 		}
@@ -1200,8 +1074,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("debugOn", true)]
 		[Tooltip("Log fade values")]
 		private bool debugCamFade = false;
-		public bool DebugCamFade
-		{
+		public bool DebugCamFade {
 			get { return debugCamFade; }
 			set { debugCamFade = value; }
 		}
@@ -1210,8 +1083,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("debugOn", true)]
 		[Tooltip("Draw colisions")]
 		private bool debugCollision = false;
-		public bool DebugCollision
-		{
+		public bool DebugCollision {
 			get { return debugCollision; }
 			set { debugCollision = value; }
 		}
@@ -1221,8 +1093,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("debugOn", true)]
 		[Tooltip("Draw lock on vectors")]
 		private bool debugLockOn = false;
-		public bool DebugLockOn
-		{
+		public bool DebugLockOn {
 			get { return debugLockOn; }
 			set { debugLockOn = value; }
 		}
@@ -1231,8 +1102,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("debugOn", true)]
 		[Tooltip("Draw vertical movement comparison vectors at world origin")]
 		private bool debugCameraVerticalMovement = false;
-		public bool DebugCameraVerticalMovement
-		{
+		public bool DebugCameraVerticalMovement {
 			get { return debugCameraVerticalMovement; }
 			set { debugCameraVerticalMovement = value; }
 		}
@@ -1241,8 +1111,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("debugOn", true)]
 		[Tooltip("Log camera distance behaviour")]
 		private bool debugLockOnCameraDistanceBehaviour = false;
-		public bool DebugLockOnCameraDistanceBehaviour
-		{
+		public bool DebugLockOnCameraDistanceBehaviour {
 			get { return debugLockOnCameraDistanceBehaviour; }
 			set { debugLockOnCameraDistanceBehaviour = value; }
 		}
@@ -1251,8 +1120,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("debugOn", true)]
 		[Tooltip("Log lock on calculations")]
 		private bool debugCameraLockOnCalculations = false;
-		public bool DebugCameraLockOnCalculations
-		{
+		public bool DebugCameraLockOnCalculations {
 			get { return debugCameraLockOnCalculations; }
 			set { debugCameraLockOnCalculations = value; }
 		}
@@ -1261,8 +1129,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("debugOn", true)]
 		[Tooltip("Log camera vertical calculation mode")]
 		private bool debugCameraLookingUpDown = false;
-		public bool DebugCameraLookingUpDown
-		{
+		public bool DebugCameraLookingUpDown {
 			get { return debugCameraLookingUpDown; }
 			set { debugCameraLookingUpDown = value; }
 		}
@@ -1271,8 +1138,7 @@ namespace ThirdPersonCameraWithLockOn
 		[DrawIf("debugOn", true)]
 		[Tooltip("Target Switching with right stick / mouse vizualization")]
 		private bool debugAxisTargetSwitching = false;
-		public bool DebugRightStickTargetSwitching
-		{
+		public bool DebugRightStickTargetSwitching {
 			get { return debugAxisTargetSwitching; }
 			set { debugAxisTargetSwitching = value; }
 		}
@@ -1282,14 +1148,12 @@ namespace ThirdPersonCameraWithLockOn
 
 
 		float x = 180.0f;
-		public float X
-		{
+		public float X {
 			get { return x; }
 			set { x = value; }
 		}
 		float y = 0.0f;
-		public float Y
-		{
+		public float Y {
 			get { return y; }
 			set { y = value; }
 		}
@@ -1328,8 +1192,7 @@ namespace ThirdPersonCameraWithLockOn
 		//private bool isCurrentPositionInCollision = false;
 
 		[ExecuteInEditMode]
-		void OnValidate()
-		{
+		void OnValidate() {
 
 			yMinLimit = Mathf.Max(yMinLimit, -89f);
 			yMaxLimit = Mathf.Min(yMaxLimit, 89f);
@@ -1357,8 +1220,7 @@ namespace ThirdPersonCameraWithLockOn
 			axisTargetChangeAngleCone = Mathf.Max(axisTargetChangeAngleCone, 1.0f);
 
 
-			if (dynamicControlTypeDetection == true)
-			{
+			if (dynamicControlTypeDetection == true) {
 				usingMouse = true;
 				usingController = false;
 			}
@@ -1379,159 +1241,140 @@ namespace ThirdPersonCameraWithLockOn
 #if ENABLE_INPUT_SYSTEM
 
 
-        // overloaded functions to be used with send messages/c# events / directly though script
+		// overloaded functions to be used with send messages/c# events / directly though script
 
-        public void OnOrbit(InputAction.CallbackContext value)
-        {
-            OnOrbit(value.ReadValue<Vector2>());
-        }
-
-        public void OnOrbit(Vector2 dir)
-        {
-            if (cameraInputType != InputType.InputSystem) return;
-            moveInput = dir;
+		public void OnOrbit(InputAction.CallbackContext value) {
+			OnOrbit(value.ReadValue<Vector2>());
 		}
 
-        public void OnLockOn(InputAction.CallbackContext value)
-        {
-            OnLockOn(value.started);
+		public void OnOrbit(Vector2 dir) {
+			if (cameraInputType != InputType.InputSystem) return;
+			moveInput = dir;
+		}
 
-        }
+		public void OnLockOn(InputAction.CallbackContext value) {
+			OnLockOn(value.started);
 
-        public void OnLockOn(bool started)
-        {
-            if (cameraInputType != InputType.InputSystem) return;
-            if (started)
-            {
-                lockOnInput = true;
-                lockOnPressType = ButtonPress.Down;
+		}
 
-            }
-            else
-            {
-                lockOnInput = false;
-                lockOnPressType = ButtonPress.Up;
+		public void OnLockOn(bool started) {
+			if (cameraInputType != InputType.InputSystem) return;
+			if (started) {
+				lockOnInput = true;
+				lockOnPressType = ButtonPress.Down;
 
-            }
-        }
+			}
+			else {
+				lockOnInput = false;
+				lockOnPressType = ButtonPress.Up;
 
-        public void OnCamReset(InputAction.CallbackContext value)
-        {
-            //bool reset = value.ReadValue<float>() >= 0.5 ? true : false
-            OnCamReset();
-        }
-        public void OnCamReset()
-        {
-            if (cameraInputType != InputType.InputSystem) return;
-            camResetInput = true;
-        }
-        public void OnChangeTarget(InputAction.CallbackContext value)
-        {
-            //value.ReadValue<float>() >= 0.5 ? true : false
-            OnChangeTarget(  );
-        }
+			}
+		}
 
-        public void OnChangeTarget()
-        {
-            if (cameraInputType != InputType.InputSystem) return;
-            changeTargetsInput = true;
-        }
-        public void OnPreviousTarget(InputAction.CallbackContext value)
-        {
-            // prevTargetsInput = value.ReadValue<float>() >= 0.5 ? true : false;
-            OnPreviousTarget();
-        }
+		public void OnCamReset(InputAction.CallbackContext value) {
+			//bool reset = value.ReadValue<float>() >= 0.5 ? true : false
+			OnCamReset();
+		}
+		public void OnCamReset() {
+			if (cameraInputType != InputType.InputSystem) return;
+			camResetInput = true;
+		}
+		public void OnChangeTarget(InputAction.CallbackContext value) {
+			//value.ReadValue<float>() >= 0.5 ? true : false
+			OnChangeTarget();
+		}
 
-        public void OnPreviousTarget()
-        {
-            if (cameraInputType != InputType.InputSystem) return;
-            prevTargetsInput = true;
-        }
+		public void OnChangeTarget() {
+			if (cameraInputType != InputType.InputSystem) return;
+			changeTargetsInput = true;
+		}
+		public void OnPreviousTarget(InputAction.CallbackContext value) {
+			// prevTargetsInput = value.ReadValue<float>() >= 0.5 ? true : false;
+			OnPreviousTarget();
+		}
+
+		public void OnPreviousTarget() {
+			if (cameraInputType != InputType.InputSystem) return;
+			prevTargetsInput = true;
+		}
 
 
-        public void OnControlsChanged(PlayerInput playerInput)
-        {
-            if (playerInput.currentControlScheme == "Gamepad")
-                OnControlsChanged(true);
-            else
-            {
-                OnControlsChanged(false);
-            }
-        }
+		public void OnControlsChanged(PlayerInput playerInput) {
+			if (playerInput.currentControlScheme == "Gamepad")
+				OnControlsChanged(true);
+			else {
+				OnControlsChanged(false);
+			}
+		}
 
-        public void OnControlsChanged(bool gamepad)
-        {
-            if (cameraInputType != InputType.InputSystem) return;
+		public void OnControlsChanged(bool gamepad) {
+			if (cameraInputType != InputType.InputSystem) return;
 
-            usingMouse = false;
-            usingController = false;
-            if (gamepad)
-                usingController = true;
-            else
-            {
-                usingMouse = true;
-            }
-        }
+			usingMouse = false;
+			usingController = false;
+			if (gamepad)
+				usingController = true;
+			else {
+				usingMouse = true;
+			}
+		}
 
 
-        //to be used with the genrated c# script
-        public void Awake()
-        {
-        if(inputSystemUseScript)
-            {
+		//to be used with the genrated c# script
+		public void Awake() {
+			if (inputSystemUseScript) {
 
-                cameraIA = new CameraInputActions();
-                cameraIA.ThirdPersonCamera.LockOn.started += ctx => OnLockOn(true);
-                cameraIA.ThirdPersonCamera.LockOn.canceled += ctx => OnLockOn(false);
-                cameraIA.ThirdPersonCamera.Orbit.performed += ctx => OnOrbit(ctx.ReadValue<Vector2>());
-                cameraIA.ThirdPersonCamera.CamReset.started += ctx => OnCamReset();
-                cameraIA.ThirdPersonCamera.ChangeTargets.started += ctx => OnChangeTarget();
-                cameraIA.ThirdPersonCamera.PreviousTarget.started += ctx => OnPreviousTarget();
-                InputSystem.onActionChange += (obj, change) => OnActionChange(obj, change);
-            }
-        }
+				cameraIA = new CameraInputActions();
+				cameraIA.ThirdPersonCamera.LockOn.started += ctx => OnLockOn(true);
+				cameraIA.ThirdPersonCamera.LockOn.canceled += ctx => OnLockOn(false);
+				cameraIA.ThirdPersonCamera.Orbit.performed += ctx => OnOrbit(ctx.ReadValue<Vector2>());
+				cameraIA.ThirdPersonCamera.CamReset.started += ctx => OnCamReset();
+				cameraIA.ThirdPersonCamera.ChangeTargets.started += ctx => OnChangeTarget();
+				cameraIA.ThirdPersonCamera.PreviousTarget.started += ctx => OnPreviousTarget();
+				InputSystem.onActionChange += (obj, change) => OnActionChange(obj, change);
+			}
+		}
 
-        private void OnEnable()
-        {
-            if(cameraIA != null)
-                cameraIA.Enable();
-        }
-        private void OnDisable()
-        {
-            if(cameraIA != null)
-                cameraIA.Disable();
-        }
+		private void OnEnable() {
+			if (cameraIA != null)
+				cameraIA.Enable();
+			//CombatMovement.resetCma += CustomResetCam;
+			//PlayerLockOn.switchTarget += SwapTargets;
+		}
+		private void OnDisable() {
+			if (cameraIA != null)
+				cameraIA.Disable();
+			//CombatMovement.resetCma -= CustomResetCam;
+			//PlayerLockOn.switchTarget -= SwapTargets;
+		}
+		private void SwapTargets(bool val) {
+			ChangeTarget();
+		}
+		// workaround for detecting device when using script instead of player input
+		public void OnActionChange(object obj, InputActionChange change) {
+			if (cameraInputType != InputType.InputSystem) return;
 
-        // workaround for detecting device when using script instead of player input
-        public void OnActionChange(object obj, InputActionChange change)
-        {
-            if (cameraInputType != InputType.InputSystem) return;
+			if (change == InputActionChange.ActionPerformed) {
+				var inputAction = (InputAction)obj;
+				var lastControl = inputAction.activeControl;
+				var lastDevice = lastControl.device;
 
-            if (change == InputActionChange.ActionPerformed)
-            {
-                var inputAction = (InputAction)obj;
-                var lastControl = inputAction.activeControl;
-                var lastDevice = lastControl.device;
+				Gamepad gamepad = obj as Gamepad;
 
-                Gamepad gamepad = obj as Gamepad; 
+				//Debug.Log($"device: {lastDevice.description}");
 
-                //Debug.Log($"device: {lastDevice.description}");
-
-                if(gamepad != null)
-                {
-                    OnControlsChanged(true);
-                }
-                else
-                {
-                    OnControlsChanged(false);
-                }
-            }
-        }
+				if (gamepad != null) {
+					OnControlsChanged(true);
+				}
+				else {
+					OnControlsChanged(false);
+				}
+			}
+		}
 
 
 #endif
-		private void ClearInputs()
-		{
+		private void ClearInputs() {
 			// button is held after first frame of pressing
 			if (lockOnPressType == ButtonPress.Down)
 				lockOnPressType = ButtonPress.Held;
@@ -1547,14 +1390,10 @@ namespace ThirdPersonCameraWithLockOn
 			//moveInput = Vector2.zero;
 		}
 
-		private bool GetCameraInput(string buttonName, KeyCode[] keycodes, ButtonPress press, CameraInput input)
-		{
-			if (cameraInputType == InputType.InputSystem)
-			{
-				switch (input)
-				{
-					case CameraInput.LockOnInput:
-						{
+		private bool GetCameraInput(string buttonName, KeyCode[] keycodes, ButtonPress press, CameraInput input) {
+			if (cameraInputType == InputType.InputSystem) {
+				switch (input) {
+					case CameraInput.LockOnInput: {
 							if (press == lockOnPressType && lockOnPressType != ButtonPress.None)
 								return true;
 							return false;
@@ -1569,12 +1408,9 @@ namespace ThirdPersonCameraWithLockOn
 				}
 			}
 
-			if (cameraInputType == InputType.InputManager)
-			{
-				try
-				{
-					switch (press)
-					{
+			if (cameraInputType == InputType.InputManager) {
+				try {
+					switch (press) {
 						case ButtonPress.Held:
 							return Input.GetButton(buttonName);
 						case ButtonPress.Down:
@@ -1584,20 +1420,16 @@ namespace ThirdPersonCameraWithLockOn
 						default: return false;
 					}
 				}
-				catch (UnityEngine.UnityException exp)
-				{
+				catch (UnityEngine.UnityException exp) {
 					Debug.LogError(exp);
 					return false;
 				}
 
 			}
-			else
-			{
+			else {
 				bool pressed = false;
-				for (int i = 0; i < keycodes.Length; i++)
-				{
-					switch (press)
-					{
+				for (int i = 0; i < keycodes.Length; i++) {
+					switch (press) {
 						case ButtonPress.Held:
 							pressed = pressed || Input.GetKey(keycodes[i]);
 							break;
@@ -1615,10 +1447,8 @@ namespace ThirdPersonCameraWithLockOn
 			}
 		}
 
-		private float GetCameraAxis(CameraAxis axisName)
-		{
-			if (cameraInputType == InputType.InputSystem)
-			{
+		private float GetCameraAxis(CameraAxis axisName) {
+			if (cameraInputType == InputType.InputSystem) {
 				float axisValue = 0.0f;
 				if (axisName == CameraAxis.MouseX || axisName == CameraAxis.RightStickX)
 					axisValue = moveInput.x;
@@ -1634,34 +1464,26 @@ namespace ThirdPersonCameraWithLockOn
 
 				return axisValue;
 			}
-			else
-			{
-				try
-				{
-					switch (axisName)
-					{
-						case CameraAxis.MouseX:
-							{
+			else {
+				try {
+					switch (axisName) {
+						case CameraAxis.MouseX: {
 								return Input.GetAxis(mouseInputX);
 							}
-						case CameraAxis.MouseY:
-							{
+						case CameraAxis.MouseY: {
 								return Input.GetAxis(mouseInputY);
 							}
-						case CameraAxis.RightStickX:
-							{
+						case CameraAxis.RightStickX: {
 								return Input.GetAxis(rightStickX);
 							}
-						case CameraAxis.RightStickY:
-							{
+						case CameraAxis.RightStickY: {
 								return Input.GetAxis(rightStickY);
 							}
 						default:
 							return 0.0f;
 					}
 				}
-				catch (UnityEngine.UnityException exp)
-				{
+				catch (UnityEngine.UnityException exp) {
 					Debug.Log(exp);
 					return 0.0f;
 				}
@@ -1670,23 +1492,21 @@ namespace ThirdPersonCameraWithLockOn
 		}
 
 
-		void Start()
-		{
+		void Start() {
 
-			if (follow == null)
-			{
+			print("Start");
+			if (follow == null) {
 				Debug.LogWarning("Third Person Camera With Lock On follow not assigned, trying to follow a player tag by default.", follow);
 				// folow the player!!
-				follow = GameObject.FindWithTag("Player").transform;
-				if (follow == null)
-				{
+				follow = GameObject.FindGameObjectWithTag("Player").transform;
+				if (follow == null) {
 					Debug.LogError("Third Person Camera With Lock On not following any object, assign an object to follow variable", follow);
+					follow = Player.GetPlayer().transform;
 					//follow = gameObject.transform;
 				}
 			}
-
-			if (cameraInputType == InputType.InputSystem)
-			{
+			//Debug.Log(follow);
+			if (cameraInputType == InputType.InputSystem) {
 				dynamicControlTypeDetection = false;
 				usingMouse = true;
 				usingController = false;
@@ -1702,8 +1522,7 @@ namespace ThirdPersonCameraWithLockOn
 			hFOV = Mathf.Atan(cameraHeightAt1 * cam.aspect) * 2 * Mathf.Rad2Deg; //needs recalc on screen change
 
 
-			if (lockOnReticle)
-			{
+			if (lockOnReticle) {
 				lockOnReticle.sizeDelta = Vector2.zero;
 			}
 
@@ -1732,30 +1551,28 @@ namespace ThirdPersonCameraWithLockOn
 
 			transform.LookAt(lookAt);
 
+
 			moveInput = Vector2.zero;
+
 		}
 
 
-		void Update()
-		{
+		void Update() {
 
 			// prepare lock on targets
 
 			if (enableLockOn && (GetCameraInput(lockOnButton, lockOnKeyCodes, ButtonPress.Down, CameraInput.LockOnInput) || (lockOnInput && lockOnPressType == ButtonPress.Down))
-				&& (!lockOnToggle || !lockOnToggleEngaged))
-			{
-                lockOnCurrent = -1;
+				&& (!lockOnToggle || !lockOnToggleEngaged)) {
+				lockOnCurrent = -1;
 				lockOnTargets = SortLockOns();
-				if (lockOnTargets != null && lockOnTargets.Length > 0)
-				{
+				if (lockOnTargets != null && lockOnTargets.Length > 0) {
 					//lockOnTarget = lockOnTargets[0];
 					lockOnCurrent = lockOnTargets.Length - 1;
 					ChangeTarget();
 
 				}
 				//lockOnInput = false;
-				if (!lockOnManualControl && axisTargetChange)
-				{
+				if (!lockOnManualControl && axisTargetChange) {
 					StopCoroutine("SwitchTargetCooldownCoroutine");
 					StartCoroutine("SwitchTargetCooldownCoroutine");
 				}
@@ -1763,41 +1580,33 @@ namespace ThirdPersonCameraWithLockOn
 
 
 
-			if (enableLockOn && (GetCameraInput(lockOnButton, lockOnKeyCodes, ButtonPress.Held, CameraInput.LockOnInput) || lockOnToggleEngaged))
-			{
+			if (enableLockOn && (GetCameraInput(lockOnButton, lockOnKeyCodes, ButtonPress.Held, CameraInput.LockOnInput) || lockOnToggleEngaged)) {
 				//enable targetswitch
 				if (enableChangeTarget && GetCameraInput(changeTargetsButton, changeTargetKeyCodes, ButtonPress.Down, CameraInput.ChangeTargetsInput)
-					&& lockOnTargets != null && lockOnTargets.Length > 0)
-				{
+					&& lockOnTargets != null && lockOnTargets.Length > 0) {
 					ChangeTarget();
 				}
 
-				if (enableChangeTarget && GetCameraInput(previousTargetButton, previousTargetKeyCodes, ButtonPress.Down, CameraInput.PrevTargetsInput) && lockOnTargets != null && lockOnTargets.Length > 0)
-				{
+				if (enableChangeTarget && GetCameraInput(previousTargetButton, previousTargetKeyCodes, ButtonPress.Down, CameraInput.PrevTargetsInput) && lockOnTargets != null && lockOnTargets.Length > 0) {
 					PreviousTarget();
 				}
 
 			}
 
 			// check if lockon target is out of range
-			if (breakLockOnWhenOutOfRange && lockOnDistanceLimit > 0)
-			{
-				if (lockOnTarget != null && Vector3.Distance(lockOnTarget.transform.position, transform.position) > lockOnDistanceLimit)
-				{
-					lockOnTarget = null;
+			if (breakLockOnWhenOutOfRange && lockOnDistanceLimit > 0) {
+				if (lockOnTarget != null && Vector3.Distance(lockOnTarget.transform.position, transform.position) > lockOnDistanceLimit) {
+					LockOnTarget = null;
 				}
 			}
 
-			if (breakLockOnWhenTargetBehindWall && CheckIfTargetBehindWall(lockOnTarget))
-			{
-				lockOnTarget = null;
+			if (breakLockOnWhenTargetBehindWall && CheckIfTargetBehindWall(lockOnTarget)) {
+				LockOnTarget = null;
 			}
 
 		}
 
-		void LateUpdate()
-		{
-
+		void LateUpdate() {
 			// hof and aspect are calculated every frame so that the screen can be dragged mid gameplay
 			float cameraHeightAt1 = Mathf.Tan(cam.fieldOfView * Mathf.Deg2Rad * .5f);
 			hFOV = Mathf.Atan(cameraHeightAt1 * cam.aspect) * 2 * Mathf.Rad2Deg;
@@ -1805,17 +1614,13 @@ namespace ThirdPersonCameraWithLockOn
 			//float camhorizontal = Mathf.Tan(hFOV * Mathf.Deg2Rad *0.5f) + 0.01f;
 
 
-			if (camstate == CamStates.Off)
-			{
+			if (camstate == CamStates.Off) {
 				lookAt = follow.position + lookoffset;
 
-				if (lockOnReticle)
-				{
-					if (lockOnReticleWorksWithOffMode)
-					{
+				if (lockOnReticle) {
+					if (lockOnReticleWorksWithOffMode) {
 						// if the player is holding the lock on button
-						if (enableLockOn && GetCameraInput(lockOnButton, lockOnKeyCodes, ButtonPress.Held, CameraInput.LockOnInput))
-						{
+						if (enableLockOn && GetCameraInput(lockOnButton, lockOnKeyCodes, ButtonPress.Held, CameraInput.LockOnInput)) {
 							Vector2 lockOnPos = cam.WorldToViewportPoint(lockOnTarget.transform.position);
 							lockOnReticle.anchorMin = lockOnPos;
 							lockOnReticle.anchorMax = lockOnPos;
@@ -1823,14 +1628,12 @@ namespace ThirdPersonCameraWithLockOn
 							lockOnReticle.sizeDelta = Vector2.Lerp(lockOnReticle.sizeDelta, new Vector2(50f, 50f), lockonAnimSpeed * Time.deltaTime);
 						}
 						// else remove the lock on reticle
-						else
-						{
+						else {
 							lockOnReticle.sizeDelta = Vector2.zero;
 						}
 
 					}
-					else
-					{
+					else {
 						lockOnReticle.sizeDelta = Vector2.zero;
 					}
 				}
@@ -1849,35 +1652,29 @@ namespace ThirdPersonCameraWithLockOn
 			// if lock on is a toggle exit when the button is pressed
 			if (enableLockOn && camstate == CamStates.LockOn
 				&& ((!lockOnToggle && GetCameraInput(lockOnButton, lockOnKeyCodes, ButtonPress.Up, CameraInput.LockOnInput)
-				|| (lockOnToggle && GetCameraInput(lockOnButton, lockOnKeyCodes, ButtonPress.Down, CameraInput.LockOnInput) && lockOnToggleEngaged))))
-			{
+				|| (lockOnToggle && GetCameraInput(lockOnButton, lockOnKeyCodes, ButtonPress.Down, CameraInput.LockOnInput) && lockOnToggleEngaged)))) {
 				//Debug.Log("toggle depressed");
 
-				if (lockOnToggle)
-				{
+				if (lockOnToggle) {
 					lockOnTogglePressed = true;
 					lockOnToggleEngaged = false;
 				}
-				else
-				{
+				else {
 					StartCoroutine("LockOnCooldown");
 				}
 
 			}
 
 			// if lock on is a toggle keep the camstate in lock on and check if we exited the state
-			if (camstate == CamStates.LockOn && lockOnToggle && enableLockOn)
-			{
+			if (camstate == CamStates.LockOn && lockOnToggle && enableLockOn) {
 				// exit the state
-				if (lockOnToggleEngaged == false)
-				{
+				if (lockOnToggleEngaged == false) {
 					camstate = CamStates.ThirdPersonCam;
 					GetXYFromXYLockOn();
 				}
 			}
 			// if lock on isnt toggle camstate is third person unless determined otherwise later
-			else if (enableLockOn)
-			{
+			else if (enableLockOn) {
 				camstate = CamStates.ThirdPersonCam;
 			}
 
@@ -1889,15 +1686,12 @@ namespace ThirdPersonCameraWithLockOn
 				camstate = CamStates.LockOn;
 
 
-			if (enableLockOn || (!enableLockOn && camstate == CamStates.LockOn))
-			{
+			if (enableLockOn || (!enableLockOn && camstate == CamStates.LockOn)) {
 				if ((lockOnToggle && GetCameraInput(lockOnButton, lockOnKeyCodes, ButtonPress.Down, CameraInput.LockOnInput) && lockOnTarget != null && !lockOnTogglePressed)
-					|| (!lockOnToggle && GetCameraInput(lockOnButton, lockOnKeyCodes, ButtonPress.Held, CameraInput.LockOnInput) && lockOnTarget != null))
-				{
+					|| (!lockOnToggle && GetCameraInput(lockOnButton, lockOnKeyCodes, ButtonPress.Held, CameraInput.LockOnInput) && lockOnTarget != null)) {
 					camstate = CamStates.LockOn;
 
-					if (lockOnToggle)
-					{
+					if (lockOnToggle) {
 						lockOnToggleEngaged = true;
 						lockOnTogglePressed = true;
 					}
@@ -1905,8 +1699,7 @@ namespace ThirdPersonCameraWithLockOn
 
 			}
 
-			if (enableCamReset && !(camstate == CamStates.LockOn) && GetCameraInput(cameraResetButton, cameraResetKeyCodes, ButtonPress.Down, CameraInput.CamResetInput))
-			{
+			if (enableCamReset && !(camstate == CamStates.LockOn) && GetCameraInput(cameraResetButton, cameraResetKeyCodes, ButtonPress.Down, CameraInput.CamResetInput)) {
 				camstate = CamStates.ResetCam;
 			}
 
@@ -1914,8 +1707,7 @@ namespace ThirdPersonCameraWithLockOn
 
 			// switch state to Lock On
 			if (/* Input.GetButtonDown (lockOnButton) */enableLockOn && GetCameraInput(lockOnButton, lockOnKeyCodes, ButtonPress.Down, CameraInput.LockOnInput)
-				&& ((lockOnToggleEngaged) || !lockOnToggle))
-			{
+				&& ((lockOnToggleEngaged) || !lockOnToggle)) {
 
 				InitiateLockOn_Internal();
 
@@ -1927,20 +1719,17 @@ namespace ThirdPersonCameraWithLockOn
 			/**
 				Camera modes are handled here
 			 */
-			switch (camstate)
-			{
+			switch (camstate) {
 				/**
 					ThirdPersonCam is the regular third person camera mode
 				 */
 				case CamStates.ThirdPersonCam:
 
-					if (lockOnReticle != null)
-					{
+					if (lockOnReticle != null) {
 						lockOnReticle.sizeDelta = Vector2.zero;
 					}
 
-					if (!usingController && !usingMouse)
-					{
+					if (!usingController && !usingMouse) {
 						//camstate = CamStates.ResetCam;
 						x = Vector3.Angle(follow.forward, Vector3.forward);
 						if (follow.forward.x < 0) { x = 360 - x; }
@@ -1950,24 +1739,18 @@ namespace ThirdPersonCameraWithLockOn
 
 
 					// switch between controller and mouse when using the old school input system
-					if (dynamicControlTypeDetection && cameraInputType != InputType.InputSystem)
-					{
-						if (usingController)
-						{
-							if (GetCameraAxis(CameraAxis.RightStickX) == 0 && GetCameraAxis(CameraAxis.RightStickY) == 0 && (GetCameraAxis(CameraAxis.MouseX) > 0 || GetCameraAxis(CameraAxis.MouseY) > 0))
-							{
+					if (dynamicControlTypeDetection && cameraInputType != InputType.InputSystem) {
+						if (usingController) {
+							if (GetCameraAxis(CameraAxis.RightStickX) == 0 && GetCameraAxis(CameraAxis.RightStickY) == 0 && (GetCameraAxis(CameraAxis.MouseX) > 0 || GetCameraAxis(CameraAxis.MouseY) > 0)) {
 								toggleInput();
 							}
 						}
-						if (usingMouse)
-						{
-							if ((GetCameraAxis(CameraAxis.RightStickX) > 0 || GetCameraAxis(CameraAxis.RightStickY) > 0) && GetCameraAxis(CameraAxis.MouseX) == 0 && GetCameraAxis(CameraAxis.MouseY) == 0)
-							{
+						if (usingMouse) {
+							if ((GetCameraAxis(CameraAxis.RightStickX) > 0 || GetCameraAxis(CameraAxis.RightStickY) > 0) && GetCameraAxis(CameraAxis.MouseX) == 0 && GetCameraAxis(CameraAxis.MouseY) == 0) {
 								toggleInput();
 							}
 						}
-						if (!usingMouse && !usingController)
-						{
+						if (!usingMouse && !usingController) {
 							// forces a control to be used, then the dynamic detection can change it
 							usingMouse = true;
 						}
@@ -1975,8 +1758,7 @@ namespace ThirdPersonCameraWithLockOn
 					/**
 						Mouse input
 					 */
-					if (usingMouse)
-					{
+					if (usingMouse) {
 						//Debug.Log(GetCameraAxis(CameraAxis.MouseX));
 						//analog movement
 						xDelta = GetCameraAxis(CameraAxis.MouseX) * xSpeed * distance;
@@ -1995,35 +1777,26 @@ namespace ThirdPersonCameraWithLockOn
 					/**
 						Controller input
 					 */
-					if (usingController)
-					{
+					if (usingController) {
 						// if no camera controller input is detected
-						if (GetCameraAxis(CameraAxis.RightStickY) == 0)
-						{
-							if (useSoftLimits)
-							{
-								if (y > yMaxLimit && y < yMaxLimit + yLerpSpeed)
-								{
+						if (GetCameraAxis(CameraAxis.RightStickY) == 0) {
+							if (useSoftLimits) {
+								if (y > yMaxLimit && y < yMaxLimit + yLerpSpeed) {
 									y = yMaxSoftLimit;
 								}
-								else if (y < yMinSoftLimit && y > yMinSoftLimit - yLerpSpeed)
-								{
+								else if (y < yMinSoftLimit && y > yMinSoftLimit - yLerpSpeed) {
 									y = yMinSoftLimit;
 								}
-								else
-								{
-									if (y > yMaxSoftLimit)
-									{
+								else {
+									if (y > yMaxSoftLimit) {
 										y = y - yLerpSpeed;
 									}
-									else if (y < yMinSoftLimit)
-									{
+									else if (y < yMinSoftLimit) {
 										y = y + yLerpSpeed;
 									}
 								}
 							}
-							else if (lerpCameraToDefault)
-							{
+							else if (lerpCameraToDefault) {
 								if (y < yLerpSpeed + defaultYAngle && y > defaultYAngle - yLerpSpeed)
 									y = defaultYAngle;
 								else
@@ -2031,8 +1804,7 @@ namespace ThirdPersonCameraWithLockOn
 
 							}
 						}
-						else
-						{
+						else {
 							yDelta = GetCameraAxis(CameraAxis.RightStickY) * ySpeed * distance;
 							y = (inverseYAxis) ? y + yDelta : y - yDelta;
 
@@ -2066,15 +1838,15 @@ namespace ThirdPersonCameraWithLockOn
 				 */
 				case CamStates.ResetCam:
 
-					x = Vector3.Angle(follow.forward, Vector3.forward);
+					/*x = Vector3.Angle(follow.forward, Vector3.forward);
 					if (follow.forward.x < 0) { x = 360 - x; }
 					y = defaultYAngle;
 
 					MoveCamera(x, y, distance, lookAt, lockCameraYDuringCollision);
 
-					transform.LookAt(lookAt);
+					transform.LookAt(lookAt);*/
 
-
+					CameraRepostion();
 
 					break;
 				/**
@@ -2083,8 +1855,7 @@ namespace ThirdPersonCameraWithLockOn
 				case CamStates.LockOn:
 
 					//if there are enemies
-					if (lockOnTarget != null)
-					{
+					if (lockOnTarget != null) {
 
 						//setup lookat
 						//lockOnLookAt = (characterOffset + lockOnTarget.transform.position) / 2.0f;
@@ -2094,11 +1865,9 @@ namespace ThirdPersonCameraWithLockOn
 
 						float targetDistance = new Vector3(lockOnTarget.transform.position.x - lookAt.x, 0, lockOnTarget.transform.position.z - lookAt.z).magnitude;
 
-						if (targetDistance > lockOnCameraFullRotationMaxDistance)
-						{
+						if (targetDistance > lockOnCameraFullRotationMaxDistance) {
 							//farCam
-							if (debugOn && debugLockOnCameraDistanceBehaviour)
-							{
+							if (debugOn && debugLockOnCameraDistanceBehaviour) {
 								Debug.Log("FarCamActive");
 							}
 
@@ -2112,14 +1881,12 @@ namespace ThirdPersonCameraWithLockOn
 							float centerAngle = Vector3.Angle(Vector3.forward, floorAngle);
 
 							// [0,360]
-							if (floorAngle.x < 0)
-							{
+							if (floorAngle.x < 0) {
 								centerAngle = 360 - centerAngle;
 							}
 
 							// if center angle jumps 0->360 or 360->0
-							if (Mathf.Abs(xLockOn - centerAngle) > 180)
-							{
+							if (Mathf.Abs(xLockOn - centerAngle) > 180) {
 								// eaqch round trip means that the CA and x get further away by a factor of 180
 								//Debug.Log("(x-ca) / 180 " + (Mathf.Abs(xLockOn - centerAngle) / 180));
 
@@ -2132,14 +1899,12 @@ namespace ThirdPersonCameraWithLockOn
 								// if the center angle and xlockon are no longer in the same angle specter [0,360]
 								// adjust the center angle to overflow to xlockon range
 
-								if (xLockOn - centerAngle > 180)
-								{
+								if (xLockOn - centerAngle > 180) {
 									float newAngle = overflowFactor * 360 - (xLockOn - centerAngle);
 									centerAngle = xLockOn + newAngle;
 									//Debug.Log("x-ca > 180");
 								}
-								else if (xLockOn - centerAngle < -180)
-								{
+								else if (xLockOn - centerAngle < -180) {
 									float newAngle = overflowFactor * 360 + (xLockOn - centerAngle);
 									centerAngle = xLockOn - newAngle;
 									//Debug.Log("x-ca < -180");
@@ -2147,34 +1912,27 @@ namespace ThirdPersonCameraWithLockOn
 							}
 							//Debug.Log(centerAngle);
 
-							if (lockOnManualControl)
-							{
-								if (usingController)
-								{
+							if (lockOnManualControl) {
+								if (usingController) {
 									//xlockon lerp to centerAngle
-									if (GetCameraAxis(CameraAxis.RightStickX) == 0)
-									{
+									if (GetCameraAxis(CameraAxis.RightStickX) == 0) {
 										//y released needs to return to default
 
 										//if (y < yLerpSpeed+ defaultYAngle || Math.Abs(y) > defaultYAngle - yLerpSpeed)
-										if (xLockOn < yLerpSpeed + centerAngle && xLockOn > centerAngle - yLerpSpeed)
-										{
+										if (xLockOn < yLerpSpeed + centerAngle && xLockOn > centerAngle - yLerpSpeed) {
 											xLockOn = centerAngle;
 										}
-										else
-										{
+										else {
 											xLockOn = (xLockOn > centerAngle ? xLockOn - yLerpSpeed : xLockOn + yLerpSpeed);
 										}
 									}
-									else
-									{
+									else {
 										xDelta += GetCameraAxis(CameraAxis.RightStickX) * xSpeed / 2 * distance;
 										xLockOn += GetCameraAxis(CameraAxis.RightStickX) * xSpeed / 2 * distance;
 									}
 								}
 
-								if (usingMouse)
-								{
+								if (usingMouse) {
 									//float xLockOnDelta = GetCameraAxis(CameraAxis.MouseX) * xSpeed/2 * distance;
 									float xDelta = GetCameraAxis(CameraAxis.MouseX) * xSpeed / 2 * distance;
 									xLockOn = inverseXAxis ? xLockOn + xDelta : xLockOn - xDelta;
@@ -2193,8 +1951,7 @@ namespace ThirdPersonCameraWithLockOn
 							// 	//Debug.Log("camera aspect ratio " + cam.aspect );
 							// }
 
-							if (lockOnManualControl)
-							{
+							if (lockOnManualControl) {
 								float horizontal;
 								float angleLimit;
 
@@ -2223,13 +1980,11 @@ namespace ThirdPersonCameraWithLockOn
 								angleLimit = Math.Abs(angleLimit);
 
 								// smooth interpolation to angle limit 
-								if (angleLimitCurrent > Mathf.Abs(angleLimit))
-								{
+								if (angleLimitCurrent > Mathf.Abs(angleLimit)) {
 									angleLimitCurrent -= farCamTransitionSpeed * Time.deltaTime;
 								}
 
-								if (angleLimitCurrent < Mathf.Abs(angleLimit))
-								{
+								if (angleLimitCurrent < Mathf.Abs(angleLimit)) {
 									angleLimitCurrent = angleLimit;
 								}
 
@@ -2237,8 +1992,7 @@ namespace ThirdPersonCameraWithLockOn
 
 								xLockOn = ClampAngle(xLockOn, centerAngle - angleLimitCurrent, centerAngle + angleLimitCurrent);
 
-								if (debugOn && debugCameraLockOnCalculations)
-								{
+								if (debugOn && debugCameraLockOnCalculations) {
 									//Debug.Log("lockOnRotationRangePercent " + lockOnRotationRangePercent * 0.01f);
 									Debug.Log("horizontal " + horizontal);
 									//Debug.Log("followScalarProjection " + followScalarProjection);
@@ -2255,23 +2009,18 @@ namespace ThirdPersonCameraWithLockOn
 
 
 						}
-						else
-						{
+						else {
 							//closeCam
-							if (debugOn && debugLockOnCameraDistanceBehaviour)
-							{
+							if (debugOn && debugLockOnCameraDistanceBehaviour) {
 								Debug.Log("closeCamActive");
 							}
 
-							if (lockOnManualControl)
-							{
-								if (usingController)
-								{
+							if (lockOnManualControl) {
+								if (usingController) {
 									xDelta = GetCameraAxis(CameraAxis.RightStickX) * xSpeed / 2 * distance;
 									xLockOn += InverseXAxis ? xDelta : -xDelta;
 								}
-								else if (usingMouse)
-								{
+								else if (usingMouse) {
 									xDelta = GetCameraAxis(CameraAxis.MouseX) * xSpeed / 2 * distance;
 									xLockOn += InverseXAxis ? xDelta : -xDelta;
 								}
@@ -2281,12 +2030,10 @@ namespace ThirdPersonCameraWithLockOn
 
 						}
 
-						if (!lockOnManualControl)
-						{
+						if (!lockOnManualControl) {
 							AutomaticLockOnUpdate();
 							// if we are using the right stick for target change
-							if (axisTargetChange)
-							{
+							if (axisTargetChange) {
 								SwitchTargetUsingAxis();
 							}
 
@@ -2299,8 +2046,7 @@ namespace ThirdPersonCameraWithLockOn
 
 
 						// angle between floor and char to target
-						if (debugOn && debugLockOn)
-						{
+						if (debugOn && debugLockOn) {
 							Debug.DrawLine(transform.position, lockOnLookAt, Color.red);
 							Debug.DrawLine(characterOffset, lockOnLookAt, Color.blue);
 
@@ -2311,15 +2057,13 @@ namespace ThirdPersonCameraWithLockOn
 
 						//float charTotarget = Vector3.Distance(characterOffset, lockOnLookAt);
 
-						if (experimentalTurnOffAutomaticDistanceCalculation)
-						{
+						if (experimentalTurnOffAutomaticDistanceCalculation) {
 							//lockOnDistance = distance + (characterOffset - lockOnLookAt).magnitude;
 
 							MoveCamera(xLockOn, yLockOn, distance, lookAt, false);
 
-							if (experimentalLockOnDisingageOnSteepAngle && CheckIfSteepAngle(lockOnLookAt))
-							{
-								lockOnTarget = null;
+							if (experimentalLockOnDisingageOnSteepAngle && CheckIfSteepAngle(lockOnLookAt)) {
+								LockOnTarget = null;
 								return;
 
 							}
@@ -2328,8 +2072,7 @@ namespace ThirdPersonCameraWithLockOn
 
 							transform.LookAt(smoothLookAt);
 						}
-						else
-						{
+						else {
 
 
 							Vector3 charToLookVec = lockOnLookAt - characterOffset;
@@ -2344,8 +2087,7 @@ namespace ThirdPersonCameraWithLockOn
 							//float charLockOnAngle = Vector3.Angle(charToTargetAngle, charToLookVec);
 
 							// these rays are at world origin, for debugging angles and cross products
-							if (debugOn && debugLockOn)
-							{
+							if (debugOn && debugLockOn) {
 								//Vector3 origin = Vector3.zero;
 								Debug.Log(Vector3.Angle(charToTargetAngle, lockOnLookAt - characterOffset));
 								Debug.DrawRay(Vector3.zero, lockOnLookAt - characterOffset, Color.cyan);
@@ -2363,20 +2105,17 @@ namespace ThirdPersonCameraWithLockOn
 							Vector3 lookAtToThirdPersonCam = camFreePos - lockOnLookAt;
 
 
-							if (debugOn && debugCameraVerticalMovement)
-							{
+							if (debugOn && debugCameraVerticalMovement) {
 								Debug.Log("playerJumping " + playerJumping);
 								Debug.Log("stopCameraFollowingYWhenPlayerIsJumping " + stopCameraFollowingYWhenPlayerIsJumping);
 							}
 
 
-							if (!stopCameraFollowingYWhenPlayerIsJumping || playerJumping == false)
-							{
+							if (!stopCameraFollowingYWhenPlayerIsJumping || playerJumping == false) {
 								Vector3 crossFreexFloor = Vector3.Cross(lookAtToThirdPersonCam, charToTargetProject);
 								Vector3 negativeAngle = Quaternion.Euler(0, -90, 0) * charToTargetProject.normalized; //lookingUp
 
-								if (debugOn && debugCameraVerticalMovement)
-								{
+								if (debugOn && debugCameraVerticalMovement) {
 									Debug.Log("lookAtToThirdPersonCam, -charToTargetProject angle " + Vector3.Angle(lookAtToThirdPersonCam, -charToTargetProject)); //yLockOn positive
 									Debug.DrawLine(Vector3.zero, lookAtToThirdPersonCam, Color.red);
 									Debug.DrawLine(Vector3.zero, -charToTargetProject, Color.blue);
@@ -2388,8 +2127,7 @@ namespace ThirdPersonCameraWithLockOn
 
 
 								yLockOn = Vector3.Angle(lookAtToThirdPersonCam, -charToTargetProject);
-								if (Mathf.Sign(crossFreexFloor.x) == Mathf.Sign(negativeAngle.x))
-								{
+								if (Mathf.Sign(crossFreexFloor.x) == Mathf.Sign(negativeAngle.x)) {
 									yLockOn = 0 - yLockOn;
 								}
 
@@ -2415,8 +2153,7 @@ namespace ThirdPersonCameraWithLockOn
 
 
 						//lock on graphic
-						if (lockOnReticle != null)
-						{
+						if (lockOnReticle != null) {
 							Vector2 lockOnPos = cam.WorldToViewportPoint(lockOnTarget.transform.position);
 							lockOnReticle.anchorMin = lockOnPos;
 							lockOnReticle.anchorMax = lockOnPos;
@@ -2424,16 +2161,14 @@ namespace ThirdPersonCameraWithLockOn
 							lockOnReticle.sizeDelta = Vector2.Lerp(lockOnReticle.sizeDelta, new Vector2(50f, 50f), lockonAnimSpeed * Time.deltaTime);
 
 							// turn off the reticle when in cooldown
-							if (LNcooldown)
-							{
+							if (LNcooldown) {
 								lockOnReticle.sizeDelta = Vector2.zero;
 							}
 						}
 
 
 					}
-					else
-					{
+					else {
 						//no emenies free cam
 						goto case CamStates.ThirdPersonCam;
 					}
@@ -2447,11 +2182,20 @@ namespace ThirdPersonCameraWithLockOn
 
 			camFadeObjects(this.transform.position);
 			camFadeFollow();
-
+			//if (NewZend.GetPlayer().Lockedon)
+			//CameraRepostion();
 		}
 
-		bool CheckIfSteepAngle(Vector3 target)
-		{
+		private void CameraRepostion() {
+			x = Vector3.Angle(follow.forward, Vector3.forward);
+			if (follow.forward.x < 0) { x = 360 - x; }
+			y = defaultYAngle;
+
+			MoveCamera(x, y, distance, lookAt, lockCameraYDuringCollision);
+
+			transform.LookAt(lookAt);
+		}
+		bool CheckIfSteepAngle(Vector3 target) {
 			//check if the angles are too steep
 			Vector3 lookAtDir = (transform.position - target).normalized;
 			Vector3 floorDir = lookAtDir;
@@ -2460,27 +2204,25 @@ namespace ThirdPersonCameraWithLockOn
 
 			//angle of view is always positive
 			// the y of the lookAtDir tells us if our angle is positive or negative
-			if (lookAtDir.y < 0)
-			{
+			if (lookAtDir.y < 0) {
 				angleOfView *= -1f;
 			}
 
-			if (angleOfView > experimentalLockOnDisingageMaxAngle || angleOfView < experimentalLockOnDisingageMinAngle)
-			{
+			if (angleOfView > experimentalLockOnDisingageMaxAngle || angleOfView < experimentalLockOnDisingageMinAngle) {
 				return true;
 			}
 
 			return false;
 		}
-
-		private void AutomaticLockOnUpdate()
-		{
+		private void CustomResetCam(bool val) {
+			LockOnManualControl = val;
+		}
+		private void AutomaticLockOnUpdate() {
 			// the camera is positioned at the characters back
 			Vector3 floorDirection = follow.position - lockOnLookAt;
 			floorDirection.y = 0;
 			xLockOn = Vector3.Angle(-Vector3.forward, floorDirection);
-			if (floorDirection.x > 0)
-			{
+			if (floorDirection.x > 0) {
 				xLockOn = 360 - xLockOn;
 			}
 
@@ -2498,8 +2240,7 @@ namespace ThirdPersonCameraWithLockOn
 
 
 		// calculates camera distance from lookAt in Lock on mode
-		private float FOVLockOnDistance(bool upsideTri)
-		{
+		private float FOVLockOnDistance(bool upsideTri) {
 			//using angles and vectors
 
 
@@ -2517,11 +2258,9 @@ namespace ThirdPersonCameraWithLockOn
 
 
 
-			if (upsideTri)
-			{
+			if (upsideTri) {
 
-				if (debugOn && debugCameraLookingUpDown)
-				{
+				if (debugOn && debugCameraLookingUpDown) {
 					Debug.Log("Camera Looking Up");
 				}
 
@@ -2537,11 +2276,9 @@ namespace ThirdPersonCameraWithLockOn
 				floorExtend = follow.transform.position + (-charToTargetProject.normalized * lockOnScreenBottomMargin);
 
 			}
-			else
-			{
+			else {
 
-				if (debugOn && debugCameraLookingUpDown)
-				{
+				if (debugOn && debugCameraLookingUpDown) {
 					Debug.Log("Camera Looking Down");
 				}
 
@@ -2562,8 +2299,7 @@ namespace ThirdPersonCameraWithLockOn
 
 			float beta = 180 - ThirdPersonCamLookAtAngle - ThirdPersonCamToFloorOffsetAngle;
 
-			if (debugOn && debugCameraLookingUpDown)
-			{
+			if (debugOn && debugCameraLookingUpDown) {
 				Debug.Log("ThirdPersonCamLookAtAngle " + ThirdPersonCamLookAtAngle);
 				Debug.Log("ThirdPersonCamToFloorOffsetAngle " + ThirdPersonCamToFloorOffsetAngle);
 				Debug.DrawLine(characterOffset, camFreePos, Color.green);
@@ -2577,8 +2313,7 @@ namespace ThirdPersonCameraWithLockOn
 			//cos
 
 			float floorSide = x + lockOnScreenBottomMargin;
-			if (!upsideTri)
-			{
+			if (!upsideTri) {
 				floorSide += Vector3.Magnitude(characterOffset - follow.transform.position);
 			}
 
@@ -2594,23 +2329,20 @@ namespace ThirdPersonCameraWithLockOn
 
 		}
 
-		public Vector3 SmoothLookingAt(Vector3 smoothLookAt, Vector3 lockOnLookAt, float lookSpeed)
-		{
+		public Vector3 SmoothLookingAt(Vector3 smoothLookAt, Vector3 lockOnLookAt, float lookSpeed) {
 			if (!CompareVectors(smoothLookAt, lockOnLookAt, 1f))
 				smoothLookAt = Vector3.Lerp(smoothLookAt, lockOnLookAt, lookSpeed * Time.deltaTime);
 			else smoothLookAt = lockOnLookAt;
 			return smoothLookAt;
 		}
 
-		private void SmoothPosition(Vector3 fromPos, Vector3 toPos, float speed)
-		{
+		private void SmoothPosition(Vector3 fromPos, Vector3 toPos, float speed) {
 
 			this.transform.position = Vector3.SmoothDamp(fromPos, toPos, ref velocityCamSmooth, speed /* *  Time.deltaTime */);
 
 		}
 
-		public void MoveCamera(float x, float y, float distance, Vector3 lookAt, bool collisionYlock = false)
-		{
+		public void MoveCamera(float x, float y, float distance, Vector3 lookAt, bool collisionYlock = false) {
 
 			//xprev = x;
 			//yprev = y;
@@ -2627,8 +2359,7 @@ namespace ThirdPersonCameraWithLockOn
 
 			bool hitSomething = BoxCastWallCollision(characterOffset, ref targetPosition, collisionYlock);
 
-			if (collisionYlock && hitSomething)
-			{
+			if (collisionYlock && hitSomething) {
 				BoxCastWallCollision(characterOffset, ref targetPosition, false);
 			}
 
@@ -2637,8 +2368,7 @@ namespace ThirdPersonCameraWithLockOn
 
 			Vector3 newPosition = Vector3.SmoothDamp(this.transform.position, targetPosition, ref velocityCamSmooth, smoothSpeed);
 
-			if (debugOn && debugThirdPersonMode)
-			{
+			if (debugOn && debugThirdPersonMode) {
 				//Debug.DrawLine(lookAt, currentRot * negDistance + lookAt, Color.magenta);
 				Debug.DrawLine(newPosition, lookAt, Color.green);
 				//Debug.DrawLine(targetPosition, lookAt, Color.grey);
@@ -2658,8 +2388,7 @@ namespace ThirdPersonCameraWithLockOn
 
 		}
 
-		private int CalculatePhaseOfAngle(float angle, float shift = 180.0f)
-		{
+		private int CalculatePhaseOfAngle(float angle, float shift = 180.0f) {
 			float xPeriod = (angle + shift) / 360;
 
 			// determine whether the current x is on the same period
@@ -2670,20 +2399,17 @@ namespace ThirdPersonCameraWithLockOn
 
 
 		// increases the xCurrent angle by phase of angle X (in the nearest range of)
-		private float CalculateAngleByPhaseOfX(float x, float xCurrent, float angleOffset = 0.0f)
-		{
+		private float CalculateAngleByPhaseOfX(float x, float xCurrent, float angleOffset = 0.0f) {
 
 			int xPeriod = CalculatePhaseOfAngle(x);
 			float xNew = xCurrent + 360 * xPeriod;
 			xNew += angleOffset;
 
 			//x and xcur differecne should be <180
-			if (x - xNew > 180)
-			{
+			if (x - xNew > 180) {
 				xNew += 360;
 			}
-			else if (x - xNew < -180)
-			{
+			else if (x - xNew < -180) {
 				xNew -= 360;
 			}
 
@@ -2694,8 +2420,7 @@ namespace ThirdPersonCameraWithLockOn
 
 
 		// phase shifts x so that its inbetween xprev and xnext
-		private float CalculateAngleInBetweenAngles(float xprev, float xnext, float x)
-		{
+		private float CalculateAngleInBetweenAngles(float xprev, float xnext, float x) {
 
 			// if(xprev > xnext)
 			// {
@@ -2745,27 +2470,23 @@ namespace ThirdPersonCameraWithLockOn
 				return xPhaseNext;
 
 
-			if ((xprev <= xPhasePrev && xPhasePrev <= xnext) || (xnext <= xPhasePrev && xPhasePrev <= xprev))
-			{
+			if ((xprev <= xPhasePrev && xPhasePrev <= xnext) || (xnext <= xPhasePrev && xPhasePrev <= xprev)) {
 				//Debug.Log("firstPhase");
 				return xPhasePrev;
 			}
 
-			if ((xprev <= xPhaseNext && xPhaseNext <= xnext) || (xnext <= xPhaseNext && xPhaseNext <= xprev))
-			{
+			if ((xprev <= xPhaseNext && xPhaseNext <= xnext) || (xnext <= xPhaseNext && xPhaseNext <= xprev)) {
 				//Debug.Log("secondPhase");
 				return xPhaseNext;
 			}
 
 			// cases when the angle is outside the xprev xnext range
-			if ((xprev <= xnext && xnext <= xPhasePrev) || (xnext <= xprev && xPhasePrev <= xnext))
-			{
+			if ((xprev <= xnext && xnext <= xPhasePrev) || (xnext <= xprev && xPhasePrev <= xnext)) {
 				//Debug.Log("outsideprev");
 				return xPhasePrev;
 			}
 
-			if ((xprev <= xnext && xPhaseNext <= xprev) || (xnext <= xprev && xprev <= xPhaseNext))
-			{
+			if ((xprev <= xnext && xPhaseNext <= xprev) || (xnext <= xprev && xprev <= xPhaseNext)) {
 				//Debug.Log("outsidenext");
 				return xPhaseNext;
 			}
@@ -2796,11 +2517,9 @@ namespace ThirdPersonCameraWithLockOn
 			//return xPhasePrev;
 		}
 
-		public void camFadeObjects(Vector3 toTarget)
-		{
+		public void camFadeObjects(Vector3 toTarget) {
 
-			if (cameraFadeObjects == false)
-			{
+			if (cameraFadeObjects == false) {
 				return;
 			}
 
@@ -2810,12 +2529,10 @@ namespace ThirdPersonCameraWithLockOn
 
 			hits = Physics.SphereCastAll(start, fadeObjectsSpherecastRadius, direction, direction.magnitude + fadeObjectsSpherecastRadius, cameraFadeLayer);
 
-			for (int i = 0; i < hits.Length; i++)
-			{
+			for (int i = 0; i < hits.Length; i++) {
 
 				Renderer rend = hits[i].transform.GetComponent<Renderer>();
-				if (rend)
-				{
+				if (rend) {
 
 					float alpha = 0f;
 
@@ -2836,8 +2553,7 @@ namespace ThirdPersonCameraWithLockOn
 					//Set the transparencym script handles fading
 					fo.SetTransparency(alpha);
 
-					if (debugOn && debugCamFade)
-					{
+					if (debugOn && debugCamFade) {
 						Debug.Log("hits[i].distance " + hits[i].distance);
 						Debug.Log("alpha " + alpha);
 						fo.DebugOn = true;
@@ -2847,16 +2563,12 @@ namespace ThirdPersonCameraWithLockOn
 			}
 		}
 
-		private void camFadeFollow()
-		{
-			if (fadePlayerWhenClose && (this.transform.position - characterOffset).magnitude < playerFadeDistance)
-			{
+		private void camFadeFollow() {
+			if (fadePlayerWhenClose && (this.transform.position - characterOffset).magnitude < playerFadeDistance) {
 				Renderer[] rends = follow.gameObject.GetComponentsInChildren<Renderer>();
-				for (int i = 0; i < rends.Length; i++)
-				{
+				for (int i = 0; i < rends.Length; i++) {
 					Renderer rend = rends[i];
-					if (rend)
-					{
+					if (rend) {
 						float alpha = 0f;
 						FadeObject fo = rend.GetComponent<FadeObject>();
 						if (fo == null)
@@ -2873,12 +2585,10 @@ namespace ThirdPersonCameraWithLockOn
 			}
 		}
 
-		public bool BoxCastWallCollision(Vector3 followPosition, ref Vector3 cameraPosition, bool lockY = false)
-		{
+		public bool BoxCastWallCollision(Vector3 followPosition, ref Vector3 cameraPosition, bool lockY = false) {
 			bool hitSomething = false;
 
-			if (usingMouse)
-			{
+			if (usingMouse) {
 				lockY = false;
 			}
 
@@ -2905,33 +2615,28 @@ namespace ThirdPersonCameraWithLockOn
 			float nearest = Mathf.Infinity;
 			int iHit = 0;
 
-			for (int i = 0; i < hits.Length; i++)
-			{
+			for (int i = 0; i < hits.Length; i++) {
 				// only deal with the collision if it was closer than the previous one, not a trigger, and not attached to a rigidbody tagged with the dontClipTag
 				if (hits[i].distance < nearest && (!hits[i].collider.isTrigger) &&
-					(hits[i].collider == null || hits[i].collider != follow.GetComponent<Collider>()) && !hits[i].point.Equals(Vector3.zero))
-				{
+					(hits[i].collider == null || hits[i].collider != follow.GetComponent<Collider>()) && !hits[i].point.Equals(Vector3.zero)) {
 					// change the nearest collision to latest
 					nearest = hits[i].distance;
 					iHit = i;
 					hitSomething = true;
 				}
 
-				if (debugOn && debugCollision)
-				{
+				if (debugOn && debugCollision) {
 					// vizualize all the hits
 					Debug.DrawLine(followPosition, hits[i].point, Color.magenta);
 				}
 			}
 
-			if (hitSomething)
-			{
+			if (hitSomething) {
 				Vector3 hitVector = hits[iHit].point - followPosition;
 				Vector3 hitProjection = Vector3.Project(hitVector, dir.normalized);
 				Vector3 hitPointProjection = followPosition + hitProjection;
 
-				if (debugOn && debugCollision)
-				{
+				if (debugOn && debugCollision) {
 					Debug.DrawLine(followPosition, hitPointProjection, Color.blue);
 				}
 
@@ -2950,13 +2655,11 @@ namespace ThirdPersonCameraWithLockOn
 
 
 				// keeps the Y from moving up, used for lockon to keep the look at in view
-				if (!lockY)
-				{
+				if (!lockY) {
 					//cameraPosition = new Vector3(hitPointProjection.x - direction.x, hitPointProjection.y, hitPointProjection.z - direction.z);
 					cameraPosition = hitPointProjection + direction;
 				}
-				else
-				{
+				else {
 					if (direction.y <= 0.01f)
 						cameraPosition = new Vector3(hitPointProjection.x + direction.x, cameraPosition.y, hitPointProjection.z + direction.z);
 					else
@@ -2965,8 +2668,7 @@ namespace ThirdPersonCameraWithLockOn
 			}
 
 
-			if (debugOn && debugCollision)
-			{
+			if (debugOn && debugCollision) {
 				Color drawcol = hitSomething ? Color.red : Color.green;
 				ExtDebug.DrawBoxCastBox(boxOrigin, boxExtends, dirQuat, dir.normalized, dir.magnitude, drawcol);
 			}
@@ -2977,14 +2679,12 @@ namespace ThirdPersonCameraWithLockOn
 
 		public class RayHitComparer : IComparer
 		{
-			public int Compare(object x, object y)
-			{
+			public int Compare(object x, object y) {
 				return ((RaycastHit)x).distance.CompareTo(((RaycastHit)y).distance);
 			}
 		}
 
-		public static float ClampAngle(float angle, float min, float max)
-		{
+		public static float ClampAngle(float angle, float min, float max) {
 			angle = Mathf.Clamp(angle, min, max);
 
 			if (angle < -360F)
@@ -2996,46 +2696,32 @@ namespace ThirdPersonCameraWithLockOn
 		}
 
 
-		public void NewTarget(GameObject target)
-		{
-			lockOnTarget = target;
+		public void NewTarget(GameObject target) {
+			LockOnTarget = target;
 		}
 
-		public void NoTarget()
-		{
-			lockOnTarget = null;
+		public void NoTarget() {
+			LockOnTarget = null;
 		}
 
-		public bool CheckIfTargetBehindWall(GameObject target)
-		{
+		public bool CheckIfTargetBehindWall(GameObject target) {
 			Vector3 toLocation = target.transform.position;
 			Vector3 fromLocation = transform.position;
 
 			return CheckLineOfSight(fromLocation, toLocation, target);
 		}
 
-		public bool CheckIfInPlayerLineOfSight(GameObject target)
-		{
+		public bool CheckIfInPlayerLineOfSight(GameObject target) {
 			Vector3 fromLocation = follow.transform.position + lookoffset;
-			if (optionalPlayerLineOfSightStart)
-			{
+			if (optionalPlayerLineOfSightStart) {
 				fromLocation = optionalPlayerLineOfSightStart.position;
 			}
 			Vector3 toLocation = target.transform.position;
-			//if (optionalPlayerLineOfSightTargetTag != "")
-			//{
-			//	foreach (Transform child in target.transform)
-			//	{
-			//		if (child.tag == "LockOnTarget")
-			//			toLocation = child.transform.position;
-			//	}
-			//}
 
 			return CheckLineOfSight(fromLocation, toLocation, target);
 		}
 
-		public bool CheckLineOfSight(Vector3 fromLocation, Vector3 toLocation, GameObject traget)
-		{
+		public bool CheckLineOfSight(Vector3 fromLocation, Vector3 toLocation, GameObject traget) {
 			if (lockOnTarget == null) return false;
 
 			Vector3 dir = toLocation - fromLocation;
@@ -3047,18 +2733,15 @@ namespace ThirdPersonCameraWithLockOn
 
 			//get the collider of the target
 			Collider collider = traget.GetComponent<Collider>();
-			if (collider == null)
-			{
+			if (collider == null) {
 				collider = traget.transform.root.GetComponentInChildren<Collider>();
 			}
 
 			bool hitSomething = false;
-			for (int i = 0; i < hits.Length; i++)
-			{
+			for (int i = 0; i < hits.Length; i++) {
 				// only deal with the collision if it was closer than the previous one, not a trigger, and not attached to a rigidbody tagged with the dontClipTag
 				if ((!hits[i].collider.isTrigger) &&
-					(hits[i].collider != null || hits[i].collider != follow.GetComponent<Collider>()) && hits[i].collider != collider)
-				{
+					(hits[i].collider != null || hits[i].collider != follow.GetComponent<Collider>()) && hits[i].collider != collider) {
 					//Debug.Log("hit " + hits[i].collider + " collider " + collider);
 					hitSomething = true;
 					break;
@@ -3066,47 +2749,38 @@ namespace ThirdPersonCameraWithLockOn
 
 			}
 
-			if (debugOn && debugCollision)
-			{
+			if (debugOn && debugCollision) {
 				// vizualize all the hits
 				//Debug.DrawLine(transform.position, lockOnTarget.transform.position, (hitSomething) ? Color.red : Color.green, 2f);
-				if (hitSomething)
-				{
+				if (hitSomething) {
 					Debug.DrawLine(transform.position, lockOnTarget.transform.position, Color.red, 2f);
 					Debug.Log("hit " + collider);
 				}
 			}
 
-			if (hitSomething == true)
-			{
+			if (hitSomething == true) {
 				return true;
 			}
 			return false;
 		}
 
-		IEnumerator LockOnBehindWallTimer()
-		{
+		IEnumerator LockOnBehindWallTimer() {
 			// if behind wall and we should stop lockon	
-			while (breakLockOnWhenTargetBehindWall && lockOnTarget != null)
-			{
-				if (lockOnTarget == null || CheckIfTargetBehindWall(lockOnTarget))
-				{
+			while (breakLockOnWhenTargetBehindWall && lockOnTarget != null) {
+				if (lockOnTarget == null || CheckIfTargetBehindWall(lockOnTarget)) {
 					//break lockon	
-					lockOnTarget = null;
+					LockOnTarget = null;
 				}
-				else
-				{
+				else {
 					//delay coroutine and try testing again	
 					yield return new WaitForSeconds(1f);
 				}
 			}
 		}
-		IEnumerator SwitchTargetCooldownCoroutine()
-		{
+		IEnumerator SwitchTargetCooldownCoroutine() {
 			float t = 0;
 			// switch target cooldown is 1s
-			while (t < switchTargetCooldownTime)
-			{
+			while (t < switchTargetCooldownTime) {
 				switchTargetCooldown = true;
 				t += Time.deltaTime;
 				yield return 0;
@@ -3117,11 +2791,9 @@ namespace ThirdPersonCameraWithLockOn
 		}
 
 
-		IEnumerator LockOnCooldown()
-		{
+		IEnumerator LockOnCooldown() {
 			float t = 0;
-			while (t < lockOnCoolDownTime)
-			{
+			while (t < lockOnCoolDownTime) {
 				LNcooldown = true;
 				t += Time.deltaTime;
 				yield return 0;
@@ -3134,8 +2806,7 @@ namespace ThirdPersonCameraWithLockOn
 			LNcooldown = false;
 		}
 
-		void GetXYFromXYLockOn()
-		{
+		void GetXYFromXYLockOn() {
 			y = defaultYAngle;
 
 			//get the x relative to xLockon
@@ -3144,14 +2815,12 @@ namespace ThirdPersonCameraWithLockOn
 
 			x = Vector3.Angle(floorCharPos, -Vector3.forward);
 
-			if (floorCharPos.x > 0)
-			{
+			if (floorCharPos.x > 0) {
 				x = 360 - x;
 			}
 		}
 
-		bool CompareVectors(Vector3 a, Vector3 b, float angleError)
-		{
+		bool CompareVectors(Vector3 a, Vector3 b, float angleError) {
 			//if they aren't the same length, don't bother checking the rest.
 			if (!Mathf.Approximately(a.magnitude, b.magnitude))
 				return false;
@@ -3162,8 +2831,7 @@ namespace ThirdPersonCameraWithLockOn
 			//So the closer they are, the closer the value will be to 1.  Opposite Vectors will be -1
 			//and orthogonal Vectors will be 0.
 
-			if (cosAngle >= cosAngleError)
-			{
+			if (cosAngle >= cosAngleError) {
 				//If angle is greater, that means that the angle between the two vectors is less than the error allowed.
 				return false;
 			}
@@ -3176,48 +2844,47 @@ namespace ThirdPersonCameraWithLockOn
 		// }
 
 
-		public Vector3 getLookAt()
-		{
+		public Vector3 getLookAt() {
 			return smoothLookAt;
 		}
 
-		public void toggleInput()
-		{
-			if (usingController)
-			{
+		public void toggleInput() {
+			if (usingController) {
 				usingController = false;
 				usingMouse = true;
 			}
-			else
-			{
+			else {
 				usingController = true;
 				usingMouse = false;
 			}
 			return;
 		}
 		//Call this function to tell the camera is the player jumping or not, necessary for the stopCameraFollowingYWhenPlayerIsJumping functionallity to work
-		public void UpdateJumpingStatus(bool isJumping)
-		{
+		public void UpdateJumpingStatus(bool isJumping) {
 			playerJumping = isJumping;
 		}
 
 		// Initiate lock on via script, this disables player lock on control
-		public void InitiateLockOn(GameObject lockOnObject)
-		{
+		public void InitiateLockOn(GameObject lockOnObject) {
 			lockOnCurrent = -1;
+
 			lockOnTargets = SortLockOns();
 			enableLockOn = false;
 
-			lockOnTarget = lockOnObject;
+			if (lockOnTargets.Count() > 0 &
+				lockOnTargets[0] != null)
+				LockOnTarget = lockOnTargets[0];//lockOnObject;
 			camstate = CamStates.LockOn;
 
 			InitiateLockOn_Internal();
 		}
-
-		private void InitiateLockOn_Internal()
-		{
-			if (lockOnTarget != null)
-			{
+		private void CheckToChangeTarget() {
+			//if (lockOnTarget.GetComponent<Enemy>().OnDefeat == null) {
+			ChangeTarget();
+			//}
+		}
+		private void InitiateLockOn_Internal() {
+			if (lockOnTarget != null) {
 				// used to be checking for length of lockontargets
 				StopCoroutine("LockOnCooldown");
 				LNcooldown = false;
@@ -3232,23 +2899,20 @@ namespace ThirdPersonCameraWithLockOn
 
 				//yLockon - angle distance and floor distance
 				//xLockon - angle floordistance and floor forward
-				if (lockOnManualControl)
-				{
+				if (lockOnManualControl) {
 					Vector3 floorDistance = transform.position - lockOnLookAt;
 					floorDistance.y = 0; //floor distance vector
 
 
 					xLockOn = Vector3.Angle(-Vector3.forward, floorDistance);
-					if (floorDistance.x > 0)
-					{
+					if (floorDistance.x > 0) {
 						xLockOn = 360 - xLockOn;
 					}
 
 					//rotate by phase of x
 					xLockOn = CalculateAngleByPhaseOfX(x, xLockOn);
 				}
-				else
-				{
+				else {
 					AutomaticLockOnUpdate();
 				}
 
@@ -3258,27 +2922,22 @@ namespace ThirdPersonCameraWithLockOn
 		}
 
 		//exit lock on via script, enable player lock on command
-		public void ExitLockOn(bool enablePlayerLockOnCommand = true, bool useLockOnCooldown = false)
-		{
+		public void ExitLockOn(bool enablePlayerLockOnCommand = true, bool useLockOnCooldown = false) {
 			camstate = CamStates.ThirdPersonCam;
 			lockOnCurrent = -1;
 
-			if (lockOnToggle)
-			{
+			if (lockOnToggle) {
 				lockOnTogglePressed = true;
 				lockOnToggleEngaged = false;
 			}
-			else if (useLockOnCooldown)
-			{
+			else if (useLockOnCooldown) {
 				StartCoroutine("LockOnCooldown");
 			}
 			enableLockOn = enablePlayerLockOnCommand;
 		}
-		public bool SwitchTargetUsingAxis()
-		{
+		public bool SwitchTargetUsingAxis() {
 			// delay when switching targets
-			if (switchTargetCooldown)
-			{
+			if (switchTargetCooldown) {
 				return false;
 			}
 
@@ -3286,14 +2945,12 @@ namespace ThirdPersonCameraWithLockOn
 			float yAxisStrength;
 
 			// get the 0 to 1 strength value
-			if (usingMouse)
-			{
+			if (usingMouse) {
 				xAxisStrength = GetCameraAxis(CameraAxis.MouseX);
 				yAxisStrength = GetCameraAxis(CameraAxis.MouseY);
 			}
 			// using controller
-			else
-			{
+			else {
 				xAxisStrength = GetCameraAxis(CameraAxis.RightStickX);
 				yAxisStrength = GetCameraAxis(CameraAxis.RightStickY);
 			}
@@ -3302,8 +2959,7 @@ namespace ThirdPersonCameraWithLockOn
 			Vector2 ScreenDirection = new Vector2(xAxisStrength, yAxisStrength);
 
 			// the strength of the right stick must be above the threshold
-			if (ScreenDirection.magnitude < axisTargetChangeThreshold)
-			{
+			if (ScreenDirection.magnitude < axisTargetChangeThreshold) {
 				return false;
 			}
 			ScreenDirection.Normalize();
@@ -3317,8 +2973,7 @@ namespace ThirdPersonCameraWithLockOn
 			Vector2 targetPoint = new Vector2(targetCenter.x, targetCenter.y);
 
 			// no valid targets in cone
-			if (lockOnTargets.Length == 0)
-			{
+			if (lockOnTargets.Length == 0) {
 				return false;
 			}
 
@@ -3327,8 +2982,7 @@ namespace ThirdPersonCameraWithLockOn
 			Vector3 currentTargetViewport = cam.WorldToViewportPoint(lockOnTarget.transform.position);
 			currentTargetViewport.z = cam.nearClipPlane;
 			double minDistance = 1000000;
-			foreach (GameObject target in lockOnTargets)
-			{
+			foreach (GameObject target in lockOnTargets) {
 				// ignore targets behind camera
 				//if (IsPositionBehindCamera(t.transform.position)) continue;
 
@@ -3355,8 +3009,7 @@ namespace ThirdPersonCameraWithLockOn
 
 				//distance from the target
 				float dist = (targetViewportPoint - currentTargetViewport).sqrMagnitude;
-				if (dist < minDistance)
-				{
+				if (dist < minDistance) {
 					chosenTarget = target;
 					minDistance = dist;
 				}
@@ -3376,10 +3029,8 @@ namespace ThirdPersonCameraWithLockOn
 			return true;
 		}
 
-		void OnPostRender()
-		{
-			if (!debugOn || !debugAxisTargetSwitching)
-			{
+		void OnPostRender() {
+			if (!debugOn || !debugAxisTargetSwitching) {
 				return;
 			}
 
@@ -3422,11 +3073,9 @@ namespace ThirdPersonCameraWithLockOn
 
 			currentTargetViewport.z = cam.nearClipPlane;
 			double minDistance = 1000000;
-			foreach (GameObject target in lockOnTargets)
-			{
+			foreach (GameObject target in lockOnTargets) {
 				//ignore thing outside frustum
-				if (IsPositionInsideFrustum(target.transform.position) && !(target == lockOnTarget))
-				{
+				if (IsPositionInsideFrustum(target.transform.position) && !(target == lockOnTarget)) {
 					Vector3 targetViewportPoint = cam.WorldToViewportPoint(target.transform.position);
 					targetViewportPoint.z = cam.nearClipPlane;
 					float angle = Vector2.Angle(ScreenDirection, targetViewportPoint - currentTargetViewport);
@@ -3435,13 +3084,11 @@ namespace ThirdPersonCameraWithLockOn
 					GL.Vertex(lockOnTarget.transform.position);
 					GL.Vertex(target.transform.position);
 
-					if (ScreenDirection.magnitude > axisTargetChangeThreshold && angle <= axisTargetChangeAngleCone)
-					{
+					if (ScreenDirection.magnitude > axisTargetChangeThreshold && angle <= axisTargetChangeAngleCone) {
 						float dist = (targetViewportPoint - currentTargetViewport).sqrMagnitude;
 
 						//double dist = Math.Sin(angle) * (targetViewportPoint - currentTargetViewport).sqrMagnitude;
-						if (dist < minDistance)
-						{
+						if (dist < minDistance) {
 							chosenTarget = target;
 							minDistance = dist;
 						}
@@ -3450,8 +3097,7 @@ namespace ThirdPersonCameraWithLockOn
 				}
 
 			}
-			if (chosenTarget)
-			{
+			if (chosenTarget) {
 				GL.Color(Color.yellow);
 				GL.Vertex(lockOnTarget.transform.position);
 				GL.Vertex(chosenTarget.transform.position);
@@ -3461,15 +3107,13 @@ namespace ThirdPersonCameraWithLockOn
 			GL.End();
 			//GL.PopMatrix();
 		}
-
+		public static event UnityAction<GameObject[]> sendThese;
 		//sorts lockOns by distance from follow
-		public GameObject[] SortLockOns()
-		{
+		public GameObject[] SortLockOns() {
 
 			lockOnTargets = GameObject.FindGameObjectsWithTag(lockOnTargetsTag);
-
-			if (lockOnTargets == null)
-			{
+			sendThese.Invoke(lockOnTargets);
+			if (lockOnTargets == null) {
 				Debug.LogError("Lock On targets NULL");
 				return null;
 			}
@@ -3478,20 +3122,16 @@ namespace ThirdPersonCameraWithLockOn
 				return lockOnTargets;
 
 
-			switch (LockOnSortAlgorithmType)
-			{
-				case LockOnSortAlgorithm.ByDistanceFromFollow:
-					{
+			switch (LockOnSortAlgorithmType) {
+				case LockOnSortAlgorithm.ByDistanceFromFollow: {
 						lockOnTargets = lockOnTargets.OrderBy(t => Vector3.Distance(t.transform.position, follow.position + lookoffset)).ToArray();
 						break;
 					}
-				case LockOnSortAlgorithm.ByCameraDirection:
-					{
+				case LockOnSortAlgorithm.ByCameraDirection: {
 						lockOnTargets = lockOnTargets.OrderBy(t => Vector3.Cross(transform.forward, t.transform.position - transform.position).sqrMagnitude).ToArray();
 						break;
 					}
-				case LockOnSortAlgorithm.ByCameraDirection2D:
-					{
+				case LockOnSortAlgorithm.ByCameraDirection2D: {
 						Vector3 FloorProjection = transform.forward;
 						FloorProjection.y = 0;
 						FloorProjection.Normalize();
@@ -3500,19 +3140,15 @@ namespace ThirdPersonCameraWithLockOn
 						lockOnTargets = lockOnTargets.OrderBy(t => Vector3.Cross(FloorProjection, t.transform.position - (follow.position + lookoffset)).sqrMagnitude).ToArray();
 
 						// debug the target choosing
-						if (DebugOn && DebugLockOn)
-						{
+						if (DebugOn && DebugLockOn) {
 							Debug.DrawLine(follow.position + lookoffset, follow.position + lookoffset + FloorProjection * 50.0f, Color.yellow, 4f);
 							int i = 0;
-							foreach (GameObject target in lockOnTargets)
-							{
+							foreach (GameObject target in lockOnTargets) {
 								i++;
-								if (i == 1)
-								{
+								if (i == 1) {
 									Debug.DrawLine(target.transform.position, follow.position + lookoffset, Color.red, 2f);
 								}
-								else
-								{
+								else {
 									Debug.DrawLine(target.transform.position, follow.position + lookoffset, Color.blue, 2f);
 								}
 							}
@@ -3524,17 +3160,15 @@ namespace ThirdPersonCameraWithLockOn
 			return lockOnTargets;
 		}
 
-		public bool PreviousTarget()
-		{
+		public bool PreviousTarget() {
 			return ChangeTarget(false);
 		}
 
-		public bool ChangeTarget(bool next = true)
-		{
+		public bool ChangeTarget(bool next = true) {
+			//print("Target was switched");
 			bool targetLegal = false;
 			int i = 0;
-			while (!targetLegal)
-			{
+			while (!targetLegal) {
 				if (next)
 					lockOnCurrent = (lockOnCurrent + 1) % (lockOnTargets.Length);
 				else
@@ -3548,8 +3182,7 @@ namespace ThirdPersonCameraWithLockOn
 				i++;
 
 				// check all the targets including starting
-				if (i == lockOnTargets.Length + 1)
-				{
+				if (i == lockOnTargets.Length + 1) {
 					break;
 				}
 
@@ -3558,63 +3191,52 @@ namespace ThirdPersonCameraWithLockOn
 				//Debug.Log(lockOnCurrent +  " " + targetLegal);
 			}
 
-			if (!targetLegal)
-			{
-				lockOnTarget = null;
+			if (!targetLegal) {
+				LockOnTarget = null;
 				lockOnCurrent = -1;
 			}
 
 			return targetLegal;
 		}
 
-		public bool CheckTargetLegal()
-		{
+		public bool CheckTargetLegal() {
 			if (lockOnTarget == null) return false;
 
-			if (lockOnDistanceLimit > 0)
-			{
-				if (Vector3.Distance(lockOnTarget.transform.position, follow.position) > lockOnDistanceLimit)
-				{
+			if (lockOnDistanceLimit > 0) {
+				if (Vector3.Distance(lockOnTarget.transform.position, follow.position) > lockOnDistanceLimit) {
 					return false;
 				}
 			}
 
-			if (experimentalLockOnDisingageOnSteepAngle && CheckIfSteepAngle(lockOnTarget.transform.position))
-			{
+			if (experimentalLockOnDisingageOnSteepAngle && CheckIfSteepAngle(lockOnTarget.transform.position)) {
 
 				// check if target is steep
 				return false;
 			}
 
-			if (disallowLockingOnToTargetBehindWall || breakLockOnWhenTargetBehindWall)
-			{
-				if (CheckIfTargetBehindWall(lockOnTarget))
-				{
+			if (disallowLockingOnToTargetBehindWall || breakLockOnWhenTargetBehindWall) {
+				if (CheckIfTargetBehindWall(lockOnTarget)) {
 					return false;
 				}
 			}
 
 			if (dissalowLockOnToTargetOutsideView
-				&& !IsPositionInsideFrustum(lockOnTarget.transform.position))
-			{
+				&& !IsPositionInsideFrustum(lockOnTarget.transform.position)) {
 				return false;
 			}
 
-			if (disallowLockingOnToTargetNotInPlayerLineOfSight && CheckIfInPlayerLineOfSight(lockOnTarget))
-			{
+			if (disallowLockingOnToTargetNotInPlayerLineOfSight && CheckIfInPlayerLineOfSight(lockOnTarget)) {
 				return false;
 			}
 
 			return true;
 		}
 
-		public bool IsPositionInsideFrustum(Vector3 position)
-		{
+		public bool IsPositionInsideFrustum(Vector3 position) {
 			Vector3 ViewportPoint = cam.WorldToViewportPoint(position);
 			if (ViewportPoint.x < 1.0f && ViewportPoint.x > 0.0f
 				&& ViewportPoint.y > 0.0f && ViewportPoint.y < 1.0f &&
-				ViewportPoint.z > cam.nearClipPlane && ViewportPoint.z < cam.farClipPlane)
-			{
+				ViewportPoint.z > cam.nearClipPlane && ViewportPoint.z < cam.farClipPlane) {
 				return true;
 			}
 			return false;
@@ -3622,11 +3244,9 @@ namespace ThirdPersonCameraWithLockOn
 		}
 
 
-		public bool IsPositionBehindCamera(Vector3 position)
-		{
+		public bool IsPositionBehindCamera(Vector3 position) {
 			Vector3 ViewportPoint = cam.WorldToViewportPoint(position);
-			if (ViewportPoint.z < cam.nearClipPlane)
-			{
+			if (ViewportPoint.z < cam.nearClipPlane) {
 				return true;
 			}
 			return false;
@@ -3636,15 +3256,13 @@ namespace ThirdPersonCameraWithLockOn
 		public static class ExtDebug
 		{
 			//Draws just the box at where it is currently hitting.
-			public static void DrawBoxCastOnHit(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Vector3 direction, float hitInfoDistance, Color color)
-			{
+			public static void DrawBoxCastOnHit(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Vector3 direction, float hitInfoDistance, Color color) {
 				origin = CastCenterOnCollision(origin, direction, hitInfoDistance);
 				DrawBox(origin, halfExtents, orientation, color);
 			}
 
 			//Draws the full box from start of cast to its end distance. Can also pass in hitInfoDistance instead of full distance
-			public static void DrawBoxCastBox(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Vector3 direction, float distance, Color color)
-			{
+			public static void DrawBoxCastBox(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Vector3 direction, float distance, Color color) {
 				direction.Normalize();
 				Box bottomBox = new Box(origin, halfExtents, orientation);
 				Box topBox = new Box(origin + (direction * distance), halfExtents, orientation);
@@ -3662,12 +3280,10 @@ namespace ThirdPersonCameraWithLockOn
 				DrawBox(topBox, color);
 			}
 
-			public static void DrawBox(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Color color)
-			{
+			public static void DrawBox(Vector3 origin, Vector3 halfExtents, Quaternion orientation, Color color) {
 				DrawBox(new Box(origin, halfExtents, orientation), color);
 			}
-			public static void DrawBox(Box box, Color color)
-			{
+			public static void DrawBox(Box box, Color color) {
 				Debug.DrawLine(box.frontTopLeft, box.frontTopRight, color);
 				Debug.DrawLine(box.frontTopRight, box.frontBottomRight, color);
 				Debug.DrawLine(box.frontBottomRight, box.frontBottomLeft, color);
@@ -3706,12 +3322,10 @@ namespace ThirdPersonCameraWithLockOn
 
 				public Vector3 origin { get; private set; }
 
-				public Box(Vector3 origin, Vector3 halfExtents, Quaternion orientation) : this(origin, halfExtents)
-				{
+				public Box(Vector3 origin, Vector3 halfExtents, Quaternion orientation) : this(origin, halfExtents) {
 					Rotate(orientation);
 				}
-				public Box(Vector3 origin, Vector3 halfExtents)
-				{
+				public Box(Vector3 origin, Vector3 halfExtents) {
 					this.localFrontTopLeft = new Vector3(-halfExtents.x, halfExtents.y, -halfExtents.z);
 					this.localFrontTopRight = new Vector3(halfExtents.x, halfExtents.y, -halfExtents.z);
 					this.localFrontBottomLeft = new Vector3(-halfExtents.x, -halfExtents.y, -halfExtents.z);
@@ -3721,8 +3335,7 @@ namespace ThirdPersonCameraWithLockOn
 				}
 
 
-				public void Rotate(Quaternion orientation)
-				{
+				public void Rotate(Quaternion orientation) {
 					localFrontTopLeft = RotatePointAroundPivot(localFrontTopLeft, Vector3.zero, orientation);
 					localFrontTopRight = RotatePointAroundPivot(localFrontTopRight, Vector3.zero, orientation);
 					localFrontBottomLeft = RotatePointAroundPivot(localFrontBottomLeft, Vector3.zero, orientation);
@@ -3731,25 +3344,21 @@ namespace ThirdPersonCameraWithLockOn
 			}
 
 			//This should work for all cast types
-			static Vector3 CastCenterOnCollision(Vector3 origin, Vector3 direction, float hitInfoDistance)
-			{
+			static Vector3 CastCenterOnCollision(Vector3 origin, Vector3 direction, float hitInfoDistance) {
 				return origin + (direction.normalized * hitInfoDistance);
 			}
 
-			static Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Quaternion rotation)
-			{
+			static Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Quaternion rotation) {
 				Vector3 direction = point - pivot;
 				return pivot + rotation * direction;
 			}
 		}
 
-		public static bool FastApproximately(float a, float b, float threshold)
-		{
+		public static bool FastApproximately(float a, float b, float threshold) {
 			return ((a < b) ? (b - a) : (a - b)) <= threshold;
 		}
 
-		public static float FastSubstractAbs(float a, float b)
-		{
+		public static float FastSubstractAbs(float a, float b) {
 			return ((a < b) ? (b - a) : (a - b));
 		}
 
