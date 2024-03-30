@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Events;
 public class InteractionCanvas : CanvasManager
 {
+    
     [SerializeField] private GameObject saveIcon;
-
-    private void Start() {
-        SavePoint.enterEvent += SaveIconControl;
+    private void OnEnable() {
+        GameManager.save += SaveIconControl;
     }
     private void OnDisable() {
-        SavePoint.enterEvent -= SaveIconControl;
+        GameManager.save -= SaveIconControl;
     }
-    private void SaveIconControl(bool val) {
-        saveIcon.SetActive(val);
+    private void SaveIconControl() {
+        saveIcon.SetActive(true);
     }
 }

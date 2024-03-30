@@ -43,10 +43,18 @@ public class Player : MonoBehaviour
         Anim = GetComponent<Animator>();
         charCon = GetComponent<CharacterController>();
     }
+    private void OnEnable() {
+        ParryBox.parried += PlayParry;
+    }
+    private void OnDisable() {
+        ParryBox.parried -= PlayParry;
+    }
     // Start is called before the first frame update
     void Start()
     {
         stats.Start();
     }
-
+    private void PlayParry() {
+        anim.Play("");
+    }
 }

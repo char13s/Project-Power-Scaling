@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
     public enum EnemyType { soft, hard, absorbent }
     [SerializeField] private EnemyType type;
     public event UnityAction onDefeat;
+    public static event UnityAction<int> sendDmg;
     public enum EnemyAiStates { Null, Idle, Attacking, Chasing, ReturnToSpawn, Dead, Hit, UniqueState, UniqueState2, UniqueState3, UniqueState4, StatusEffect, Grabbed, Staggered };
     public enum EnemyHealthStatus { FullHealth, MeduimHealth, LowHealth }
     EnemyHealthStatus healthStatus;
@@ -657,7 +658,8 @@ public class Enemy : MonoBehaviour
         return dmg;
     }*/
     public void CalculateAttack(int extDmg) {
-        Zara.stats.HealthLeft -= Mathf.Max(1, stats.Attack+extDmg);
+        if(sendDmg!=null)
+        sendDmg(Mathf.Max(1, stats.Attack+extDmg));
     }
     private void StaggerCheck() {
         print("Stagger check");

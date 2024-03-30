@@ -12,16 +12,24 @@ public class ZaraInput : MonoBehaviour
     [SerializeField] private GameObject effectsPoint;
     private Animator anim;
     private Player player;
+    private PlayerInput map;
 
     private Interactable interactObj;
     public static event UnityAction onpause;
     // Start is called before the first frame update
+    private void OnEnable() {
+        
+    }
+    private void OnDisable() {
+        
+    }
     void Start()
     {
         anim = GetComponent<Animator>();
         player = GetComponent<Player>();
+        map = GetComponent<PlayerInput>();
     }
-    #region
+    #region Gameplay Controls
     private void OnMove(InputValue value) {
         Vector2 move = value.Get<Vector2>();
         anim.SetFloat("XInput", move.x);
@@ -98,6 +106,7 @@ public class ZaraInput : MonoBehaviour
         print("interacted");
         interactObj = obj;
     }
+
     #region Transformation slots
     private void OnDpadUp() {
         //Maybe transformation slots
@@ -113,4 +122,17 @@ public class ZaraInput : MonoBehaviour
 
     }
     #endregion
+    #region Menu Controls
+
+    #endregion
+    private void SwitchMaps(int val) {
+        switch (val) {
+            case 0:
+                map.SwitchCurrentActionMap("Gameplay");
+                break;
+            case 1:
+                map.SwitchCurrentActionMap("Menu");
+                break;
+        }
+    }
 }

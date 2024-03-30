@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public static event UnityAction<int> switchMap;
     public static event UnityAction gameOver;
     public static event UnityAction<int> sendOrbs;
+    public static event UnityAction save;
     //private Game tempSave;
     private int orbAmt;
     private int lastLevel;
@@ -110,12 +111,22 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-    private void LoadGame() {
+    public void LoadGame() {
         Player.GetPlayer().transform.position=SaveLoad.Load().Location;
         Player.GetPlayer().stats = SaveLoad.Load().Stats;
     }
-    private void SaveGame() {
+    public void SaveGame() {
+        if (save != null) {
+            save();
+        }
         SaveLoad.Save(Player.GetPlayer());
+    }
+    public void DumpIntoMp() {
+        Player.GetPlayer().stats.AdjustMp(orbAmt);
+        OrbAmt = 0;
+    }
+    public void OpenStatsMenu() { 
+    
     }
     private void SetCheck(GameObject val) {
         //checkPoint = val;
