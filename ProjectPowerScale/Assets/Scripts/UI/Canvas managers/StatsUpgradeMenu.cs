@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 public class StatsUpgradeMenu : CanvasManager
 {
+    private Player player;
     [SerializeField] private Button strength;
     [SerializeField] private Button auraControl;
     [SerializeField] private Button numberOfSwords;
@@ -19,47 +20,58 @@ public class StatsUpgradeMenu : CanvasManager
     [SerializeField] private TextMeshProUGUI dmgReducLvl;
     [SerializeField] private TextMeshProUGUI expMultiLvl;
     private void OnEnable() {
+        
+
+    }
+    private void Start() {
+        player = Player.GetPlayer();
         CheckWhatsAvailable();
         SetDisplayLevels();
     }
+    private void OnDisable() {
+
+    }
+    private void ActivateCanvas() {
+        CanvasControl(true);
+    }
     public void LevelStrength() {
-        Player.GetPlayer().stats.StrLvl++;
+        player.stats.StrLvl++;
         SetDisplayLevels();
     }
     public void LevelAuraControl() {
-        Player.GetPlayer().stats.AurConLvl++;
+        player.stats.AurConLvl++;
         SetDisplayLevels();
     }
     public void LevelNumberOfSwords() {
-        Player.GetPlayer().stats.NumSwordsLvl++;
+        player.stats.NumSwordsLvl++;
         SetDisplayLevels();
     }
     public void LevelEnergyOutput() {
-        Player.GetPlayer().stats.EnergyAttLvl++;
+        player.stats.EnergyAttLvl++;
         SetDisplayLevels();
     }
     public void LevelDmgReduction() {
-        Player.GetPlayer().stats.DmgReductionLvl++;
+        player.stats.DmgReductionLvl++;
         SetDisplayLevels();
     }
     public void LevelExpMultipler() {
-        Player.GetPlayer().stats.ExpModLvl++;
+        player.stats.ExpModLvl++;
         SetDisplayLevels();
     }
     private void CheckWhatsAvailable() {
-        strength.interactable = Player.GetPlayer().stats.IsStrLevelAvailable();
-        auraControl.interactable = Player.GetPlayer().stats.IsAuraConLevelAvailable();
-        numberOfSwords.interactable = Player.GetPlayer().stats.IsNumOfSwordsLevelAvailable();
-        energyOutput.interactable = Player.GetPlayer().stats.IsEnergyAttLevelAvailable();
-        dmgReduction.interactable = Player.GetPlayer().stats.IsDmgReductionLevelAvailable();
-        expMultipler.interactable = Player.GetPlayer().stats.IsExpMultiLevelAvailable();
+        strength.interactable = player.stats.IsStrLevelAvailable();
+        auraControl.interactable = player.stats.IsAuraConLevelAvailable();
+        numberOfSwords.interactable = player.stats.IsNumOfSwordsLevelAvailable();
+        energyOutput.interactable = player.stats.IsEnergyAttLevelAvailable();
+        dmgReduction.interactable = player.stats.IsDmgReductionLevelAvailable();
+        expMultipler.interactable = player.stats.IsExpMultiLevelAvailable();
     }
     private void SetDisplayLevels() {
-        strLvl.text= Player.GetPlayer().stats.StrLvl.ToString();
-        aurConLvl.text=Player.GetPlayer().stats.AurConLvl.ToString(); ;
-        numOfSwordLvl.text = Player.GetPlayer().stats.NumSwordsLvl.ToString();
-        energyOutLvl.text = Player.GetPlayer().stats.EnergyAttLvl.ToString();
-        dmgReducLvl.text = Player.GetPlayer().stats.DmgReductionLvl.ToString();
-        expMultiLvl.text = Player.GetPlayer().stats.ExpModLvl.ToString();
+        strLvl.text = player.stats.StrLvl.ToString();
+        aurConLvl.text = player.stats.AurConLvl.ToString(); ;
+        numOfSwordLvl.text = player.stats.NumSwordsLvl.ToString();
+        energyOutLvl.text = player.stats.EnergyAttLvl.ToString();
+        dmgReducLvl.text = player.stats.DmgReductionLvl.ToString();
+        expMultiLvl.text = player.stats.ExpModLvl.ToString();
     }
 }

@@ -52,11 +52,9 @@ public class GameManager : MonoBehaviour
         UnAssignEvents();
     }
     private void AssignEvents() {
-        SavePoint.saveGame += SaveGame;
         Enemy.sendOrbs += Collect;
     }
     private void UnAssignEvents() {
-        SavePoint.saveGame -= SaveGame;
         Enemy.sendOrbs -= Collect;
     }
     private void AssignPlayer() {

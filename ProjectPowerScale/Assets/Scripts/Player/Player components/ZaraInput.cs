@@ -18,10 +18,10 @@ public class ZaraInput : MonoBehaviour
     public static event UnityAction onpause;
     // Start is called before the first frame update
     private void OnEnable() {
-        
+        Interactable.sendThis += RecieveInteractable;
     }
     private void OnDisable() {
-        
+        Interactable.sendThis -= RecieveInteractable;
     }
     void Start()
     {
@@ -57,7 +57,7 @@ public class ZaraInput : MonoBehaviour
     }
     private void OnCircle() {
         if (interactObj == null)
-            anim.SetTrigger("Teleport");
+            anim.Play("Parry");
         else {
             interactObj.Interact();
         }
@@ -96,7 +96,7 @@ public class ZaraInput : MonoBehaviour
         }
     }
     private void OnParry() {
-        anim.Play("Parry");
+        
     }
     private void OnTeleport() {
         anim.Play("Dash");

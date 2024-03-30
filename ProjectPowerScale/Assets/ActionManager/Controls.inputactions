@@ -69,7 +69,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Parry",
+                    "name": "Circle",
                     "type": "Button",
                     "id": "3f4d512f-0e3d-4e6d-a9ca-d9f172d49d9a",
                     "expectedControlType": "Button",
@@ -173,6 +173,17 @@
                 },
                 {
                     "name": "",
+                    "id": "bebbca32-2fc3-4f24-9186-b8703b563949",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Square",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "f36c3aff-c218-4c81-a7d9-939546548daf",
                     "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
@@ -233,7 +244,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Parry",
+                    "action": "Circle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e7d1d188-7e30-4ff2-a55a-c98de42c7710",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Circle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

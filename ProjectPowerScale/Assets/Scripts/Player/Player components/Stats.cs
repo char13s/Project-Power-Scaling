@@ -101,6 +101,7 @@ public class Stats
         }
 
         Enemy.sendDmg += CalculateDmg;
+        SavePointMenu.fullRestore += FullRestore;
     }
     private void UpdateUi() {
         if (onHealthChange != null) {
