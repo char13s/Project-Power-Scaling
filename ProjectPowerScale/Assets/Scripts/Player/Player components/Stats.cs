@@ -70,7 +70,7 @@ public class Stats
     public int Abilitypoints { get => abilitypoints; set { abilitypoints = value; if (onBaseStatsUpdate != null) onBaseStatsUpdate(); if (onOrbGain != null) onOrbGain(abilitypoints); } }
     public int MPLeft {
         get => mpLeft; set {
-            mpLeft = Mathf.Clamp(value, 1, mp); if (updateMP != null) updateMP(MPLeft); SetSpeed();
+            mpLeft = Mathf.Clamp(value, 1, mp); if (onBaseStatsUpdate != null) onBaseStatsUpdate(); SetSpeed(); CalculateStatsOutput();
         }
     }
     public float TransformationMod { get => transformationMod; set { Mathf.Clamp(transformationMod, 1, 10000); CalculateStatsOutput(); } }
@@ -133,7 +133,7 @@ public class Stats
     }
     private void FullRestore() {
         HealthLeft = health;
-        MPLeft = MP;
+        MPLeft = mp;
     }
     private void SetSpeed() {
         Speed = 1 + (mpLeft / mp);
@@ -183,7 +183,10 @@ public class Stats
         increase.Invoke();
     }
     public void AdjustMp(int amt) {
-        MPLeft += amt;
+        MP += amt;
+        FullRestore();
+        //Debug.Log(mp);
+        MPLeft = mp;
     }
     public void DecreaseMPSlowly() {
         MPLeft -= (mp / 100);

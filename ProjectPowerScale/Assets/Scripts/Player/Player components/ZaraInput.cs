@@ -16,12 +16,15 @@ public class ZaraInput : MonoBehaviour
 
     private Interactable interactObj;
     public static event UnityAction onpause;
+    public static event UnityAction onclose;
     // Start is called before the first frame update
     private void OnEnable() {
         Interactable.sendThis += RecieveInteractable;
+        SavePointMenu.switchMapping += SwitchMaps;
     }
     private void OnDisable() {
         Interactable.sendThis -= RecieveInteractable;
+        SavePointMenu.switchMapping -= SwitchMaps;
     }
     void Start()
     {
@@ -123,12 +126,14 @@ public class ZaraInput : MonoBehaviour
     }
     #endregion
     #region Menu Controls
-
+    private void OnCancel() {
+        onclose();
+    }
     #endregion
     private void SwitchMaps(int val) {
         switch (val) {
             case 0:
-                map.SwitchCurrentActionMap("Gameplay");
+                map.SwitchCurrentActionMap("DefaultControls");
                 break;
             case 1:
                 map.SwitchCurrentActionMap("Menu");
