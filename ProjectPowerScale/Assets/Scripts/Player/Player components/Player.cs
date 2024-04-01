@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     Animator anim;
     CharacterController charCon;
     internal Stats stats = new Stats();
+    PlayerLockOn pLock;
     public bool LockedOn { get => lockedOn; set { lockedOn = value; Anim.SetBool("LockedOn",value);  } }
     public bool SkillsUp { get => skillsUp; set => skillsUp = value; }
     public GameObject AimminPoint { get => aimminPoint; set => aimminPoint = value; }
@@ -34,6 +35,7 @@ public class Player : MonoBehaviour
     public GameObject Body { get => body; set => body = value; }
     public GameObject RightHand { get => rightHand; set => rightHand = value; }
     public GameObject LeftHand { get => leftHand; set => leftHand = value; }
+    public PlayerLockOn PLock { get => pLock; set => pLock = value; }
 
     public static Player GetPlayer() => instance;
     private void Awake() {
@@ -45,6 +47,7 @@ public class Player : MonoBehaviour
         }
         Anim = GetComponent<Animator>();
         charCon = GetComponent<CharacterController>();
+        pLock = GetComponent<PlayerLockOn>();
         stats.Start();
     }
     private void OnEnable() {
