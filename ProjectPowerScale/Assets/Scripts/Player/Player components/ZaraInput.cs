@@ -60,7 +60,7 @@ public class ZaraInput : MonoBehaviour
     }
     private void OnCircle() {
         if (interactObj == null)
-            anim.Play("Parry");
+            anim.Play("Big Bang Attack"); //anim.Play("Parry");
         else {
             interactObj.Interact();
         }

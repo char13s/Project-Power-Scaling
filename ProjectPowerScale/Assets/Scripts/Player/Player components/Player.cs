@@ -8,7 +8,8 @@ public class Player : MonoBehaviour
 
     public static event UnityAction<bool> lockon;
     public static event UnityAction onPlayerDeath;
-
+    [SerializeField] private GameObject rightHand;
+    [SerializeField] private GameObject leftHand;
     [SerializeField] private GameObject aimminPoint;
     [SerializeField] private GameObject body;
     private bool lockedOn;
@@ -31,6 +32,8 @@ public class Player : MonoBehaviour
     public bool Flying { get => flying; set => flying = value; }
     public bool Blocking { get => blocking; set => blocking = value; }
     public GameObject Body { get => body; set => body = value; }
+    public GameObject RightHand { get => rightHand; set => rightHand = value; }
+    public GameObject LeftHand { get => leftHand; set => leftHand = value; }
 
     public static Player GetPlayer() => instance;
     private void Awake() {
