@@ -1,2 +1,3 @@
 # Project-Power-Scaling
-This is a game jam submission for Game Off 2023! Its an anime soulslike action rpg.
+An anime soulslike action rpg. Inspired off of dragonball Z and elden ring.
+In corperates more agile methods and a unique level/stats system, with the open structure and patient game style of a soulslike.
