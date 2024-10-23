@@ -521,7 +521,8 @@ public class Enemy : MonoBehaviour
     }
     public virtual void OnHit() {
         //StartCoroutine(waitToFall());
-        anim.Play("AirHit");
+        if(anim)
+            anim.Play("AirHit");
     }
 
 

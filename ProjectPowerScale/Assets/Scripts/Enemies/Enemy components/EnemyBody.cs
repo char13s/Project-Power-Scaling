@@ -17,7 +17,7 @@ public class EnemyBody : MonoBehaviour
         if (other.GetComponent<HitBox>()) {
             if(mesh!=null)
                 Attacked(other);
-            if (!Body.Parry&&hitSound!=null)
+            if (!Body.Parry&&hitSound!=null)//
                 Instantiate(hitSound);
             Body.CalculateDamage(other.GetComponent<HitBox>().AdditionalDamage);
         }
