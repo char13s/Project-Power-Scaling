@@ -91,3 +91,12 @@ The following packages were updated:
   com.unity.visualscripting from version 1.9.0 to 1.9.5
 The following packages were removed:
   com.unity.textmeshpro@3.0.6
+
+=== Mon May  5 12:20:30 2025
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.inputsystem from version 1.11.2 to 1.13.0
+  com.unity.test-framework from version 1.4.5 to 1.4.6
