@@ -878,3 +878,10 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 259777
+  packageName: URP Toon Shader
+  packageVersion: 
+  assetPath: Assets/CiroContinisio/ToonShader/Example/Jammo-Character/Models/Jammo_LowPoly.fbx
+  uploadId: 0

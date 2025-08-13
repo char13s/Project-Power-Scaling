@@ -6,3 +6,10 @@ NativeFormatImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 259777
+  packageName: URP Toon Shader
+  packageVersion: 
+  assetPath: Assets/CiroContinisio/ToonShader/Example/Scenes/ExampleScene/GlobalVolumeProfile.asset
+  uploadId: 0

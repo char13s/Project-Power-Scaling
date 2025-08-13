@@ -113,3 +113,10 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 259777
+  packageName: URP Toon Shader
+  packageVersion: 
+  assetPath: Assets/CiroContinisio/ToonShader/Example/Jammo-Character/Textures/mixbot_low_mixamo_edit1_Normal.png
+  uploadId: 0

@@ -5,3 +5,10 @@ DefaultImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 259777
+  packageName: URP Toon Shader
+  packageVersion: 1.0.3
+  assetPath: Assets/CiroContinisio/ToonShader/Shader/CustomLighting/LICENSE
+  uploadId: 671685

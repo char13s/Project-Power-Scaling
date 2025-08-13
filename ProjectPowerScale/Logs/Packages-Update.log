@@ -100,3 +100,11 @@ Update Mode: updateDependencies
 The following packages were updated:
   com.unity.inputsystem from version 1.11.2 to 1.13.0
   com.unity.test-framework from version 1.4.5 to 1.4.6
+
+=== Tue Aug 12 20:04:24 2025
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.render-pipelines.universal from version 12.1.12 to 17.0.3

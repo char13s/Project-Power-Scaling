@@ -5,3 +5,10 @@ PrefabImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 259777
+  packageName: URP Toon Shader
+  packageVersion: 
+  assetPath: Assets/CiroContinisio/ToonShader/Example/Jammo-Character/Prefabs/Jammo_Player.prefab
+  uploadId: 0

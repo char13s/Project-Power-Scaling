@@ -1,9 +1,7 @@
 fileFormatVersion: 2
-guid: 5c09ec492074d214fbe1a19781ad15e8
-ShaderImporter:
+guid: fdf4b066e77204ce899188d94d703a89
+AssemblyDefinitionImporter:
   externalObjects: {}
-  defaultTextures: []
-  nonModifiableTextures: []
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -12,5 +10,5 @@ AssetOrigin:
   productId: 259777
   packageName: URP Toon Shader
   packageVersion: 1.0.3
-  assetPath: Assets/CiroContinisio/ToonShader/Shader/CustomLighting/CustomLighting.hlsl
+  assetPath: Assets/CiroContinisio/ToonShader/Shader/Editor/CiroContinisio.ToonShader.Editor.asmdef
   uploadId: 671685
