@@ -812,3 +812,10 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95991
+  packageName: UMotion Pro - Animation Editor
+  packageVersion: 1.29p04
+  assetPath: Assets/UMotionExamples/Miscellaneous/Robot Kyle/Model/Robot Kyle.fbx
+  uploadId: 741370

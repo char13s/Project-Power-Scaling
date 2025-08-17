@@ -5,3 +5,10 @@ AssemblyDefinitionImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95991
+  packageName: UMotion Pro - Animation Editor
+  packageVersion: 1.29p04
+  assetPath: Assets/UMotionEditor/Scripts/Application/UMotionSourceApplication.asmdef
+  uploadId: 741370

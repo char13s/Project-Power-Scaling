@@ -6,3 +6,10 @@ NativeFormatImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95991
+  packageName: UMotion Pro - Animation Editor
+  packageVersion: 1.29p04
+  assetPath: Assets/UMotionExamples/Exported Animations/IKPullups.anim
+  uploadId: 741370

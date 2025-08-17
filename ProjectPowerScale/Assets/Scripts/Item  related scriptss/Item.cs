@@ -31,3 +31,7 @@ public class ConsumableItem : Item
 public class ModSoul:Item {
 
 }
+[CreateAssetMenu(fileName = "New ModSoul", menuName = "InventoryItems/ElementHolder")]
+public class ElementHolder:Item {
+    [SerializeField]  private GameObject element;
+}

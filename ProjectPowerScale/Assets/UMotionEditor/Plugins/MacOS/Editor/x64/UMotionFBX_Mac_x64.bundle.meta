@@ -26,3 +26,10 @@ PluginImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 95991
+  packageName: UMotion Pro - Animation Editor
+  packageVersion: 1.29p04
+  assetPath: Assets/UMotionEditor/Plugins/MacOS/Editor/x64/UMotionFBX_Mac_x64.bundle
+  uploadId: 741370
