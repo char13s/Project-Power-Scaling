@@ -28,10 +28,20 @@ public class ConsumableItem : Item
     }
 }
 [CreateAssetMenu(fileName = "New ModSoul", menuName = "InventoryItems/ModSoul")]
-public class ModSoul:Item {
-
+public class ModSoul : Item
+{
+    // This class can be used for mod souls that can be equipped or activated.
+    [SerializeField] private Elements element;
+    [SerializeField] private float attackPower;
+    public string attackName;
+    public string ActivateAttack()
+    {
+        Debug.Log("Activating attack: " + attackName);
+        // Implement logic to activate the mod soul's attack
+        return attackName;
+    }
 }
-[CreateAssetMenu(fileName = "New ModSoul", menuName = "InventoryItems/ElementHolder")]
+    [CreateAssetMenu(fileName = "New ModSoul", menuName = "InventoryItems/ElementHolder")]
 public class ElementHolder:Item {
     [SerializeField]  private GameObject element;
 }

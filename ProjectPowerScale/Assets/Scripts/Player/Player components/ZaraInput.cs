@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.Events;
 public class ZaraInput : MonoBehaviour
 {
+    [SerializeField] private Elements element; 
+    [SerializeField] private ModSoul modSoul;
     [SerializeField] private GameObject pierceSword;
     [SerializeField] private GameObject heavySwordPincer;
     [SerializeField] private GameObject protectionSwing;
@@ -60,7 +62,7 @@ public class ZaraInput : MonoBehaviour
     }
     private void OnCircle() {
         if (interactObj == null)
-            anim.Play("Big Bang Attack"); //anim.Play("Parry");
+            anim.Play(modSoul.attackName); //anim.Play("Parry");
         else {
             interactObj.Interact();
         }

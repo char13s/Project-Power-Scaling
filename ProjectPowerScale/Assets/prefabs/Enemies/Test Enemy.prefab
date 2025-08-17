@@ -53,8 +53,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 2.6680152, z: 1}
+  m_Center: {x: 0, y: 0.8340076, z: 0}
 --- !u!114 &2760736877599887675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +114,7 @@ GameObject:
   - component: {fileID: 5759940661358505654}
   m_Layer: 8
   m_Name: Test Enemy
-  m_TagString: Untagged
+  m_TagString: LockOnTarget
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -161,6 +161,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -201,7 +204,6 @@ CharacterController:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -249,10 +251,10 @@ MonoBehaviour:
   stats:
     stagger: 0
     level: 0
-    baseHealth: 0
-    baseAttack: 0
+    baseHealth: 5
+    baseAttack: 5
     baseDefense: 0
-    baseMp: 0
+    baseMp: 100
     expYield: 0
   anim: {fileID: 0}
   flip: 0
@@ -320,10 +322,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 3301267746670464100, guid: 3d11416cd51056d45954d91eb872fbcd,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
     - target: {fileID: 4024231501540511381, guid: 3d11416cd51056d45954d91eb872fbcd,
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438772585178680540, guid: 3d11416cd51056d45954d91eb872fbcd,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 7760666239972025755, guid: 3d11416cd51056d45954d91eb872fbcd,
         type: 3}

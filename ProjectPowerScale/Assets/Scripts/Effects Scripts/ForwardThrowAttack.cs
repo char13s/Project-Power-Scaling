@@ -13,7 +13,7 @@ public class ForwardThrowAttack : MonoBehaviour
         player = Player.GetPlayer();
         playerLock = player.PLock;
         direction = player.transform.forward;
-        if(player.LockedOn)
+        if(player.LockedOn&& playerLock.EnemyTarget)
             target = playerLock.EnemyTarget.transform.position;
     }
     // Update is called once per frame

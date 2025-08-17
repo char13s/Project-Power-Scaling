@@ -16113,22 +16113,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyCube
       objectReference: {fileID: 0}
-    - target: {fileID: 1055515596158368277, guid: bf8844b9dcc796541aa5cf1a955e027c,
-        type: 3}
-      propertyPath: m_TagString
-      value: LockOnTarget
-      objectReference: {fileID: 0}
     - target: {fileID: 1464914493127053855, guid: bf8844b9dcc796541aa5cf1a955e027c,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1464914493127053855, guid: bf8844b9dcc796541aa5cf1a955e027c,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3729470329254806953, guid: bf8844b9dcc796541aa5cf1a955e027c,
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -16137,21 +16122,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5759940661358505654, guid: bf8844b9dcc796541aa5cf1a955e027c,
-        type: 3}
-      propertyPath: stats.baseMp
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 5759940661358505654, guid: bf8844b9dcc796541aa5cf1a955e027c,
-        type: 3}
-      propertyPath: stats.baseAttack
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5759940661358505654, guid: bf8844b9dcc796541aa5cf1a955e027c,
-        type: 3}
-      propertyPath: stats.baseHealth
-      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18144,6 +18114,12 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.25047716
       objectReference: {fileID: 0}
+    - target: {fileID: 550653983622431121, guid: 4186f2d7b10eb9a4590a02b2c3b3af91,
+        type: 3}
+      propertyPath: modSoul
+      value: 
+      objectReference: {fileID: 11400000, guid: e5d1460257166b54bb4ea15e6c1199ff,
+        type: 2}
     - target: {fileID: 550653983622431121, guid: 4186f2d7b10eb9a4590a02b2c3b3af91,
         type: 3}
       propertyPath: pierceSword
