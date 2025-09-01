@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: Fireball
   m_EditorClassIdentifier: Assembly-CSharp::ModSoul
-  itemName: 
+  itemName: Fireball
   description: 
   icon: {fileID: 0}
   element: {fileID: 0}
-  attackPower: 0
-  attackName: 
+  attackPower: 1.4
+  attackName: Fireball

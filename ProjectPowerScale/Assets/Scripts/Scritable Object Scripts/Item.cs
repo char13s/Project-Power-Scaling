@@ -9,7 +9,7 @@ public class Item : ScriptableObject
     public string description;
     public Sprite icon;
     // You can add methods to define item behaviors, such as using the item, equipping it, etc.
-    public void Use()
+    public virtual void Use()
     {
         Debug.Log("Using item: " + itemName);
         // Implement item usage logic here
@@ -21,10 +21,11 @@ public class ConsumableItem : Item
 {
     // This class can be used for items that can be consumed, like potions or food.
     public int healthRestored;
-    public void Consume()
+    public override void Use()
     {
         Debug.Log("Consuming item: " + itemName + ", restoring " + healthRestored + " health.");
         // Implement consumption logic here, such as restoring health to the player
+        
     }
 }
 [CreateAssetMenu(fileName = "New ModSoul", menuName = "InventoryItems/ModSoul")]
@@ -41,7 +42,8 @@ public class ModSoul : Item
         return attackName;
     }
 }
-    [CreateAssetMenu(fileName = "New ModSoul", menuName = "InventoryItems/ElementHolder")]
+    [CreateAssetMenu(fileName = "New Elements", menuName = "InventoryItems/ElementHolder")]
 public class ElementHolder:Item {
-    [SerializeField]  private GameObject element;
+    [SerializeField] private GameObject element;
+    public GameObject GetElement() { return element; }
 }

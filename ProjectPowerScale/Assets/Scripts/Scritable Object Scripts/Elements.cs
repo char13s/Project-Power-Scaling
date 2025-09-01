@@ -3,8 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Elements", menuName = "Scriptable Objects/Elements")]
 public class Elements : ScriptableObject
 {
-    public string description;
-    public Sprite icon;
+    [SerializeField] string elementName;
+    [SerializeField] string description;
+    [SerializeField] Sprite icon;
     [SerializeField] private Elements[] StrongAgainst;
     [SerializeField] private Elements[] WeakAgainst;
     public Elements[] StrongAgainstElements { get => StrongAgainst; set => StrongAgainst = value; }
