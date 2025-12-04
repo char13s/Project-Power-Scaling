@@ -11975,7 +11975,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 2.03
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1799311882
 GameObject:
@@ -18671,6 +18671,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Radius
       value: 56.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 2409527905548290478, guid: 4186f2d7b10eb9a4590a02b2c3b3af91,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2820343476647708385, guid: 4186f2d7b10eb9a4590a02b2c3b3af91,
         type: 3}
