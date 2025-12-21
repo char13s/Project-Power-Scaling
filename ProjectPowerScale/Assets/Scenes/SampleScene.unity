@@ -748,7 +748,7 @@ PrefabInstance:
     - target: {fileID: -1728013695380148634, guid: 55cd6949e0ea9474c9f05ef022507529,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2953604236389334553, guid: 55cd6949e0ea9474c9f05ef022507529,
         type: 3}
@@ -11234,6 +11234,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Teen-Aza (2)
       objectReference: {fileID: 0}
+    - target: {fileID: -1728013695380148634, guid: 55cd6949e0ea9474c9f05ef022507529,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2953604236389334553, guid: 55cd6949e0ea9474c9f05ef022507529,
         type: 3}
       propertyPath: m_DirtyAABB
@@ -14238,7 +14243,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: b905db0b56ebb0644bd6d9e2b52e632a,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1317669486560826624, guid: b905db0b56ebb0644bd6d9e2b52e632a,
         type: 3}
@@ -19319,7 +19324,7 @@ PrefabInstance:
     - target: {fileID: 4957463709456886266, guid: 4186f2d7b10eb9a4590a02b2c3b3af91,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5384139807591433034, guid: 4186f2d7b10eb9a4590a02b2c3b3af91,
         type: 3}
